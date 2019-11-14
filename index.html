@@ -11,10 +11,16 @@
 
   <body>
     <header>
-      <p id="page-title">memory.io</p>
-      <div id="login-buttons">
-        <button type="button">Se connecter</button>
-        <button type="button">Nouveau compte</button>
+      <h1 id="page-title">memory.io</h1>
+      <div id="user-authentification">
+        <form method="POST" name="login_form" action="handle/login.handle.php">
+          E-mail<br>
+          <input type="email" name="email" placeholder="jean.dupont@exemple.com" required><br>
+          Mot de passe<br>
+          <input type="password" name="password" placeholder="**********" required><br>
+          <input type="submit" value="Se conecter">
+        </form>
+        <a href="pages/register.html"><button type="button">Nouveau compte</button></a>
       </div>
     </header>
 
