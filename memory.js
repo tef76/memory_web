@@ -11,7 +11,7 @@ class Card {
     this.imgFront = "img/cards/" + this.rank + ".png";
     this.isFlipped = false;
 
-    // Conteneurs HTML
+    // Conteneurs HTML nécesssaires au retournement de la carte
     this.container;
     this.front;
     this.back;
@@ -90,31 +90,31 @@ function hasGameEnded() {
   return flippedCards.length == cardsOnBoard.length;
 }
 
-// testPair : renvoie "true" si les deux dernières cartes retournées sont
+// isMatching : renvoie "true" si les deux dernières cartes retournées sont
 //    identiques et "false" sinon
-function testPair() {
+function isMatching() {
   return flippedCards[flippedCards.length - 1].rank ==
       flippedCards[flippedCards.length - 2].rank;
 }
 
-// updateScore : met à jour le score des joueurs                  --- à modifier
+// updateScore : met à jour le score des joueurs                --- à préciser ?
 function updateScore(arrayPlayer, nTurn) {
   arrayPlayer["P" + nTurn] += 100;
 }
 
-// endOfGame : met fin au jeu                                     --- à modifier
+// endOfGame : met fin au jeu                                   --- à préciser ?
 function endOfGame() {
   alert("gg");
 }
 
-// oneTurn : un tour de jeu                                       --- à modifier
+// oneTurn : un tour de jeu                                     --- à préciser ?
 function oneTurn() {
   if (flippedCards.length % 2 == 0) {
     if (hasGameEnded()) {
       endOfGame();
       return;
     }
-    if (!testPair()) {
+    if (!isMatching()) {
       setTimeout(resetTurn, 500);
     } else if (multiplayer) {
       updateScore(players, nTurn);
@@ -140,4 +140,4 @@ let availableCards = ["c01", "c01", "d01", "d01", "s01", "s01", "h01", "h01",
 "d02", "d02", "c02", "c02", "h02", "h02", "s02", "s02"];
 let cardsOnBoard = [];
 let flippedCards = [];
-initMemory(3);
+initMemory(6);
