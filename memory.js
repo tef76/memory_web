@@ -7,7 +7,7 @@ class Card {
   constructor(rank) {
     // Propriétés de la carte
     this.rank = rank;
-    this.imgBack = "img/backs/Card-Back-02-custom.png";
+    this.imgBack = "img/backs/Card-Back-02.png";
     this.imgFront = "img/cards/" + this.rank + ".png";
     this.isFlipped = false;
 
@@ -123,7 +123,7 @@ function oneTurn() {
 }
 
 // resetTurn : retourne face cachée les deux dernières cartes révélées
-function resetTurn(){
+function resetTurn() {
   flippedCards[flippedCards.length - 1].flip(false);
   flippedCards[flippedCards.length - 2].flip(false);
   flippedCards.pop();

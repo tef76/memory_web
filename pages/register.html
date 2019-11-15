@@ -5,14 +5,42 @@
   <head>
     <title>Memory.io</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/comfortaa" type="text/css"/>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet"
+      media="screen"
+      href="https://fontlibrary.org/face/comfortaa"
+      type="text/css"/>
   </head>
 
   <body>
+
+    <h2>Nouvel utilisateur :</h2>
+    <form method="POST" name="register_form "action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+      E-mail<br>
+      <input type="email" name="email" placeholder="jean.dupont@exemple.com" required><br>
+      Mot de passe<br>
+      <input type="password" name="password" placeholder="**********" required><br>
+      Confirmation du mot de passe<br>
+      <input type="password" name="password_confirm" placeholder="**********" required><br>
+      <script>
+        if (document.forms["register_form"]["password"].value != document.forms["register_form"]["password_confirm"].value) {
+          alert("Les mots de passes ne correspondent pas");
+        }
+      </script>
+      <input type="submit" value="Créer un compte">
+    </form>
+
     <footer>
-      <p>Memory.io par Rémi Durieu et Thomas Evrard sous licence MIT <a target="_blank" href="https://github.com/tef76/memory_web"><img id="github-logo" src="img/GitHub-Mark-Light-32px.png" alt="GitHub Logo"></a></p>
-      <p>Set de cartes "Playing Cards" par Iron Star Media sous licence CC-BY 3.0 modifié par Rémi Durieu</p>
-      <p>Police "Comfortaa" sous licence OFL</p>
+      <p>"Memory.io" par Rémi Durieu et Thomas Evrard sous licence MIT
+        <a target="_blank" href="https://github.com/tef76/memory_web">
+        <img id="github-logo"
+          src="img/GitHub-Mark-Light-32px.png"
+          alt="GitHub Logo">
+        </a>
+      </p>
+      <p>Set de cartes "Playing Cards" par Iron Star Media sous licence CC-BY
+        3.0 modifié par Rémi Durieu</p>
+      <p>Police "Comfortaa" par Johan Aakerlund sous licence OFL</p>
     </footer>
   </body>
 </html>

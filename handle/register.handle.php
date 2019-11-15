@@ -15,9 +15,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password_confirm = test_input($_POST["password_confirm"]);
 
   // Stoppe le script si les mots de passes ne correspondent pas
-  // if ($password != $password_confirm) {
-  //   echo "Les mots de passe ne correspondent pas";
-  // }
+  if ($password != $password_confirm) {
+    exit ("Les mots de passe ne correspondent pas");
+  }
 
   // Créé une connexion à la base de donnée avec les informations contenues dans
   //    le fichier db_infos.php
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $request = "SELECT * FROM $db_table WHERE email = '$email'";
   $result = mysqli_query($connection, $request);
   if (mysqli_fetch_assoc($result) != NULL) {
-    die ("L'adresse mail est déjà utilisée.");
+    echo "L'adresse mail est déjà utilisée.";
   }
 
   // Insère une nouvelle entrée dans la base de données
