@@ -1,3 +1,12 @@
+// TODO:
+// - améliorer la gestion des clics de/des joueurs et l'empêcher de faire
+// n'importe quoi
+// - ajouter un formulaire d'inscription dans register.html
+// - gérer la connexion d'un utilisateur enregistré
+// - implanter l'enregistrement de la partie en cours de l'utilisateur
+// enregistré dans une base de donnée et la reprendre à la reconnexion
+// - améliorer le design de l'application
+
 "use strict"
 
 // =============================================================================

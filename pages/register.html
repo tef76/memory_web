@@ -13,20 +13,14 @@
   </head>
 
   <body>
-
     <h2>Nouvel utilisateur :</h2>
-    <form method="POST" name="register_form "action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <form method="POST" name="register_form "action="../handle/register.handle.php">
       E-mail<br>
       <input type="email" name="email" placeholder="jean.dupont@exemple.com" required><br>
       Mot de passe<br>
       <input type="password" name="password" placeholder="**********" required><br>
       Confirmation du mot de passe<br>
       <input type="password" name="password_confirm" placeholder="**********" required><br>
-      <script>
-        if (document.forms["register_form"]["password"].value != document.forms["register_form"]["password_confirm"].value) {
-          alert("Les mots de passes ne correspondent pas");
-        }
-      </script>
       <input type="submit" value="Créer un compte">
     </form>
 

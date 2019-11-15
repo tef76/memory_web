@@ -3,6 +3,8 @@ include "db_infos.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+  // test_input : supprime les caractères non désirables des données envoyées
+  //    par l'utilisateur
   function test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -14,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password = test_input($_POST["password"]);
   $password_confirm = test_input($_POST["password_confirm"]);
 
+  // TODO : tester avec JS
   // Stoppe le script si les mots de passes ne correspondent pas
   if ($password != $password_confirm) {
     exit ("Les mots de passe ne correspondent pas");
