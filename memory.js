@@ -1,12 +1,3 @@
-// TODO:
-// - améliorer la gestion des clics de/des joueurs et l'empêcher de faire
-// n'importe quoi
-// - ajouter un formulaire d'inscription dans register.html
-// - gérer la connexion d'un utilisateur enregistré
-// - implanter l'enregistrement de la partie en cours de l'utilisateur
-// enregistré dans une base de donnée et la reprendre à la reconnexion
-// - améliorer le design de l'application
-
 "use strict"
 
 // =============================================================================
@@ -58,10 +49,12 @@ class Card {
   //    carte
   addEvent(card) {
     card.inner.addEventListener("click", function(){
-      if (!card.isFlipped) {
-        card.flip(true);
-        flippedCards.push(card);
-        oneTurn();
+    if(cardClick){
+        if (!card.isFlipped) {
+          card.flip(true);
+          flippedCards.push(card);
+          oneTurn();
+        }
       }
     });
   }
@@ -88,9 +81,17 @@ function initMemory(nPairs) {
     cardRank = availableCards.splice(Math.floor(Math.random() * nCards), 1)[0];
     newCard = new Card(cardRank);
     cardsOnBoard.push(newCard);
-    newCard.summon();
+    //newCard.summon();
     nCards--;
   }
+}
+
+function gameRestor(){
+    let lengthCardsOnBoard = cardsOnBoard.length;
+    for(let n = 0; n != lengthCardsOnBoard; n++){
+      alert(cardsOnBoard[n].rank);
+      cardsOnBoard[n].summon();
+    }
 }
 
 // hasGameEnded : renvoie "true" si le nombre de retournées est égal au nombre
@@ -125,6 +126,8 @@ function oneTurn() {
     }
     if (!isMatching()) {
       setTimeout(resetTurn, 500);
+      cardClickDisable();
+      setTimeout(cardClickEnabled, 500);
     } else if (multiplayer) {
       updateScore(players, nTurn);
     }
@@ -139,14 +142,25 @@ function resetTurn() {
   flippedCards.pop();
 }
 
+// cardClickDisable : Désactive le click sur les cartes
+function cardClickDisable(){
+  cardClick = false;
+}
+// cardClickEnabled : Active le click sur les cartes
+function cardClickEnabled(){
+  cardClick = true;
+}
+
 // =============================================================================
 // === PREPARATION DU MEMORY ===================================================
 // =============================================================================
 
 let players = { "P1" : 0, "P2" : 0, "P3": 0 ,"P4" : 0 };
 let multiplayer = false;
+let cardClick = true;
 let availableCards = ["c01", "c01", "d01", "d01", "s01", "s01", "h01", "h01",
 "d02", "d02", "c02", "c02", "h02", "h02", "s02", "s02"];
 let cardsOnBoard = [];
 let flippedCards = [];
 initMemory(6);
+gameRestor();
