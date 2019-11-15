@@ -49,10 +49,12 @@ class Card {
   //    carte
   addEvent(card) {
     card.inner.addEventListener("click", function(){
-      if (!card.isFlipped) {
-        card.flip(true);
-        flippedCards.push(card);
-        oneTurn();
+    if(cardClick){
+        if (!card.isFlipped) {
+          card.flip(true);
+          flippedCards.push(card);
+          oneTurn();
+        }
       }
     });
   }
@@ -82,6 +84,14 @@ function initMemory(nPairs) {
     newCard.summon();
     nCards--;
   }
+}
+
+// gameRestor : restore la partie sauvegarder
+function gameRestor(){
+    let lengthCardsOnBoard = cardsOnBoard.length;
+    for(let n = 0; n != lengthCardsOnBoard; n++){
+      cardsOnBoard[n].summon();
+    }
 }
 
 // hasGameEnded : renvoie "true" si le nombre de retournées est égal au nombre
@@ -116,6 +126,8 @@ function oneTurn() {
     }
     if (!isMatching()) {
       setTimeout(resetTurn, 500);
+      cardClickDisable();
+      setTimeout(cardClickEnabled, 500);
     } else if (multiplayer) {
       updateScore(players, nTurn);
     }
@@ -130,12 +142,22 @@ function resetTurn() {
   flippedCards.pop();
 }
 
+// cardClickDisable : Désactive le click sur les cartes
+function cardClickDisable(){
+  cardClick = false;
+}
+// cardClickEnabled : Active le click sur les cartes
+function cardClickEnabled(){
+  cardClick = true;
+}
+
 // =============================================================================
 // === PREPARATION DU MEMORY ===================================================
 // =============================================================================
 
 let players = { "P1" : 0, "P2" : 0, "P3": 0 ,"P4" : 0 };
 let multiplayer = false;
+let cardClick = true;
 let availableCards = ["c01", "c01", "d01", "d01", "s01", "s01", "h01", "h01",
 "d02", "d02", "c02", "c02", "h02", "h02", "s02", "s02"];
 let cardsOnBoard = [];
