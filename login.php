@@ -19,18 +19,29 @@
     </header>
 
     <div id="main-wrapper">
-      <section id="memory-game">
-        <script src="memory.js"></script>
-      </section>
+      <h2>Connexion</h2>
+      <br>
+      <form method="POST" name="login_form" action="<?php echo $_SERVER["PHP_SELF"];?>">
+        E-mail :<br>
+        <input type="email" name="email" placeholder="jean.dupont@exemple.com" required>
+        <br>
+        Mot de passe :<br>
+        <input type="password" name="password" placeholder="**********" required><br>
+        <br>
+        <input type="submit" value="Se connecter">
+      </form>
     </div>
 
     <footer>
       <p>"Memory.io" par Rémi Durieu et Thomas Evrard sous licence MIT
         <a target="_blank" href="https://github.com/tef76/memory_web">
-          <img id="github-logo" src="img/GitHub-Mark-Light-32px.png" alt="GitHub Logo">
+        <img id="github-logo"
+          src="img/GitHub-Mark-Light-32px.png"
+          alt="GitHub Logo">
         </a>
       </p>
-      <p>Set de cartes "Playing Cards" par Iron Star Media sous licence CC-B 3.0 modifié par Rémi Durieu</p>
+      <p>Set de cartes "Playing Cards" par Iron Star Media sous licence CC-BY
+        3.0 modifié par Rémi Durieu</p>
       <p>Police "Comfortaa" par Johan Aakerlund sous licence OFL</p>
     </footer>
   </body>

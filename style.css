@@ -65,13 +65,18 @@ header {
   align-content: space-between;
 }
 
-/* === MEMORY =============================================================== */
+/* === CONTENU PRINCIPAL ==================================================== */
 
-#memory-game {
+#main-wrapper {
   width: 800px;
   height: 100%;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* === MEMORY =============================================================== */
+
+#memory-game {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
