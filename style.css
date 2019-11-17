@@ -52,6 +52,7 @@ header {
 
 #user-authentification > a {
   padding: 15px;
+  font-size: 18px;
 }
 
 #user-authentification > a:hover {
@@ -73,7 +74,7 @@ header {
 
 #ui-container {
   width: 100%;
-  height: 96px;
+  height: 48px;
 }
 
 #ui-inner {
@@ -83,11 +84,11 @@ header {
 }
 
 #ui-main-menu, #ui-players, #ui-end-stats {
-  display: flex;
-  justify-content: center;
   position: absolute;
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
   backface-visibility: hidden;
 }
 
@@ -98,15 +99,18 @@ header {
 .control-button {
   background-color: #cfb311;
   color: #000000;
-  font-size: 18px;
-  padding: 5px;
-  margin: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 16px;
   border: 2px solid #990000;
   border-radius: 5px;
 }
 
 .control-button:hover {
   cursor: pointer;
+  color: #ffffff;
+  background-color: #990000;
+  border: 2px solid #cfb311;
 }
 
 /* === MEMORY =============================================================== */
