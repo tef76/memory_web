@@ -31,14 +31,15 @@
 
       <div id="ui-container">
         <div id="ui-inner">
-          <div id="ui-buttons">
+          <div id="ui-main-menu">
             <button class="control-button" id ="play">Jouer</button>
             <button class="control-button" id ="difficulty">Nombre de paires : 2</button>
             <button class="control-button" id ="nPlayers">Nombre de joueurs : 1</button>
           </div>
-          <div id="ui-players">
+          <div id="ui-players" class="hidden">
+            <p>Score :</p>
           </div>
-          <div id="ui-end-stats">
+          <div id="ui-end-stats" class="hidden">
           </div>
         </div>
       </div>

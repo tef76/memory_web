@@ -3,6 +3,7 @@
 // =============================================================================
 // === DEFINITION DE CARD ======================================================
 // =============================================================================
+
 class Card {
   constructor(rank) {
     // Propriétés de la carte
@@ -107,8 +108,9 @@ function isMatching() {
 }
 
 // updateScore : met à jour le score des joueurs                --- à préciser ?
-function updateScore(arrayPlayer, numPlayer) {
-  arrayPlayer["P" + numPlayer] += 100;
+function updateScore() {
+  playersScore["P" + currentPlayer] += 100;
+  document.getElementById("P" + currentPlayer).textContent = "P" + currentPlayer + " : " + playersScore["P" + currentPlayer];
 }
 
 // oneTurn : un tour de jeu                                     --- à préciser ?
@@ -116,6 +118,7 @@ function oneTurn() {
   if (flippedCards.length % 2 == 0) {
     numberOfTurn++;
     if (hasGameEnded()) {
+      updateScore();
       endOfGame();
       return;
     }
@@ -123,12 +126,12 @@ function oneTurn() {
       setTimeout(resetTurn, 500);
       switchCardClick(false);
       setTimeout(switchCardClick(true), 500);
-    } else if (multiplayer) {
-      updateScore(players, numPlayer);
+      if(multiplayer) {
+        nextPlayerTurn();
+      }
+    } else {
+      updateScore();
     }
-  }
-  else if(multiplayer) {
-    nextPlayerTurn();
   }
 }
 
@@ -164,12 +167,20 @@ function nextPlayerTurn() {
 
 // === Boutons / interface / statistiques ======================================
 
-function initButtons() {
-
+function toggleMenu(menu) {
+  document.getElementById(menu).classList.toggle("hidden");
 }
 
-function disableButtons() {
-  document.querySelectorAll(".control-button").forEach(element => element.style.visibility = "hidden");
+function createMultiplayerMenu() {
+  let container = document.getElementById("ui-players");
+  let button;
+  for (let i = 1; i <= nPlayers; i++) {
+    button = document.createElement("button");
+    button.setAttribute("class", "control-button");
+    button.setAttribute("id", "P" + i);
+    button.innerHTML = "P" + i + " : 0";
+    container.appendChild(button);
+  }
 }
 
 // statistics : affiche les stats en fin de partie
@@ -187,6 +198,7 @@ function setDifficulty() {
   difficultyButton.textContent = "Nombre de paires : " + difficulty;
 }
 
+// setPlayer : définit le nombre de joueurs
 function setPlayer() {
   if (nPlayers == 4) {
     nPlayers = 1;
@@ -205,7 +217,7 @@ let multiplayer = false;
 
 let isCardsClickable = true;
 let numberOfTurn = 0;
-let currentPlayer = 0;
+let currentPlayer = 1;
 let nPlayers = 1;
 let difficulty = 2;
 
@@ -216,13 +228,18 @@ let cardsOnBoard = [];
 let flippedCards = [];
 
 // Menu
-
 let difficultyButton = document.getElementById("difficulty");
 difficultyButton.addEventListener("click", setDifficulty);
+
 let playButton = document.getElementById("play");
 playButton.addEventListener("click", function(){
+  if(nPlayers > 1){
+    multiplayer = true;
+  }
+  toggleMenu("ui-players");
+  toggleMenu("ui-main-menu");
   initMemory(difficulty);
-  disableButtons();
+  createMultiplayerMenu();
 });
 
 let nPlayersButton = document.getElementById("nPlayers");
