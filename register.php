@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 include "db_infos.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -70,10 +72,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <body>
     <header>
-      <a href="index.html" id="page-title">mem.io</a>
+      <a href="index.php" id="page-title">mem.io</a>
       <div id="user-authentification">
-        <a href="login.php">Connexion</a>
-        <a href="register.php">Nouveau compte</a>
+        <?php
+        if (isset($_SESSION["user_email"])) {
+          echo "<p>Bienvenue ".$_SESSION["user_email"]."</p>";
+        } else {
+          echo "<a href=\"login.php\">Connexion</a>";
+          echo "<a href=\"register.php\">Nouveau compte</a>";
+        }
+        ?>
       </div>
     </header>
 
@@ -81,14 +89,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <h2>Nouveau compte</h2>
       <br>
       <form method="POST" name="register_form" action="<?php echo $_SERVER["PHP_SELF"];?>">
-        E-mail :<br>
+        E-mail :
+        <br>
         <input type="email" name="email" placeholder="jean.dupont@exemple.com" required>
-        <?php echo $email_err_msg; ?><br>
-        Mot de passe :<br>
-        <input type="password" name="password" placeholder="**********" required><br>
-        Confirmation du mot de passe :<br>
+        <?php echo $email_err_msg; ?>
+        <br>
+        Mot de passe :
+        <br>
+        <input type="password" name="password" placeholder="**********" required>
+        <br>
+        Confirmation du mot de passe :
+        <br>
         <input type="password" name="password_confirm" placeholder="**********" required>
-        <?php echo $password_err_msg; ?><br>
+        <?php echo $password_err_msg; ?>
+        <br>
+        <br>
         <input type="submit" value="Créer un compte">
       </form>
       <?php echo $validate_msg; ?>

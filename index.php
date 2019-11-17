@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 
 <html lang="fr">
@@ -11,10 +13,16 @@
 
   <body>
     <header>
-      <a href="index.html" id="page-title">mem.io</a>
+      <a href="index.php" id="page-title">mem.io</a>
       <div id="user-authentification">
-        <a href="login.php">Connexion</a>
-        <a href="register.php">Nouveau compte</a>
+        <?php
+        if (isset($_SESSION["user_email"])) {
+          echo "<p>Bienvenue ".$_SESSION["user_email"]."</p>";
+        } else {
+          echo "<a href=\"login.php\">Connexion</a>";
+          echo "<a href=\"register.php\">Nouveau compte</a>";
+        }
+        ?>
       </div>
     </header>
 
@@ -24,9 +32,9 @@
 
 
     <div id="main-wrapper">
-      <section id="memory-game">
+      <div id="memory-game">
         <script src="memory.js"></script>
-      </section>
+      </div>
     </div>
 
     <footer>
