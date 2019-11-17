@@ -89,9 +89,9 @@ function initMemory(nPairs) {
   }
 }
 
-// gameRestore : restaure la partie sauvegardée
+// gameRestore : restaure la partie sauvegardée                    --- prototype
 function gameRestore() {
-    cardsOnBoard.forEach(card => card.summon());
+  cardsOnBoard.forEach(card => card.summon());
 }
 
 // hasGameEnded : renvoie "true" si le nombre de retournées est égal au nombre
@@ -107,13 +107,14 @@ function isMatching() {
       flippedCards[flippedCards.length - 2].rank;
 }
 
-// updateScore : met à jour le score des joueurs                --- à préciser ?
+// updateScore : met à jour le score des joueurs                  --- à préciser
 function updateScore() {
   playersScore["P" + currentPlayer] += 100;
-  document.getElementById("P" + currentPlayer).textContent = "P" + currentPlayer + " : " + playersScore["P" + currentPlayer];
+  document.getElementById("P" + currentPlayer).textContent =
+      "P" + currentPlayer + " : " + playersScore["P" + currentPlayer];
 }
 
-// oneTurn : un tour de jeu                                     --- à préciser ?
+// oneTurn : un tour de jeu                      --- à préciser  --- à expliquer
 function oneTurn() {
   if (flippedCards.length % 2 == 0) {
     numberOfTurn++;
@@ -148,7 +149,7 @@ function switchCardClick(state) {
   isCardsClickable = state;
 }
 
-// endOfGame : met fin au jeu                                   --- à préciser ?
+// endOfGame : met fin au jeu                      --- prototype  --- à préciser
 function endOfGame() {
   alert(playersScore["P1"]);
   alert(playersScore["P2"]);
@@ -156,7 +157,7 @@ function endOfGame() {
   alert(playersScore["P4"]);
 }
 
-// nextPlayerTurn : lance le tour du prochain joueurs
+// nextPlayerTurn : lance le tour du prochain joueur
 function nextPlayerTurn() {
   if (currentPlayer == nPlayers) {
     currentPlayer = 1;
@@ -167,10 +168,16 @@ function nextPlayerTurn() {
 
 // === Boutons / interface / statistiques ======================================
 
+// toggleMenu : affiche/cache le menu passé en paramètre (id HTML de la forme
+//    "ui-*nom-du-menu*")
+//    Exemple : toggleMenu("ui-main-menu") --> affiche le menu principal si ce
+//    dernier était caché
 function toggleMenu(menu) {
   document.getElementById(menu).classList.toggle("hidden");
 }
 
+// createMultiplayerMenu : créé les boutons d'affichage du score en fonction du
+//    nombre de joueurs
 function createMultiplayerMenu() {
   let container = document.getElementById("ui-players");
   let button;
@@ -183,7 +190,7 @@ function createMultiplayerMenu() {
   }
 }
 
-// statistics : affiche les stats en fin de partie
+// statistics : affiche les statistiques de fin de partie          --- prototype
 function statistics() {
   alert(numberOfTurn);
 }
@@ -198,7 +205,7 @@ function setDifficulty() {
   difficultyButton.textContent = "Nombre de paires : " + difficulty;
 }
 
-// setPlayer : définit le nombre de joueurs
+// setPlayer : définit le nombre de joueurs et met à jour le bouton en fonction
 function setPlayer() {
   if (nPlayers == 4) {
     nPlayers = 1;
@@ -212,25 +219,23 @@ function setPlayer() {
 // === PREPARATION DU MEMORY ===================================================
 // =============================================================================
 
+// === Éléments de jeu
 let playersScore = { "P1" : 0, "P2" : 0, "P3": 0 ,"P4" : 0 };
 let multiplayer = false;
-
 let isCardsClickable = true;
 let numberOfTurn = 0;
 let currentPlayer = 1;
 let nPlayers = 1;
 let difficulty = 2;
 
-// Cartes
+// === Cartes
 let availableCards = ["c01", "c01", "d01", "d01", "s01", "s01", "h01", "h01",
 "d02", "d02", "c02", "c02", "h02", "h02", "s02", "s02"];
 let cardsOnBoard = [];
 let flippedCards = [];
 
-// Menu
-let difficultyButton = document.getElementById("difficulty");
-difficultyButton.addEventListener("click", setDifficulty);
-
+// === Menu princpal (affiché par défaut)
+// Bouton "Jouer"
 let playButton = document.getElementById("play");
 playButton.addEventListener("click", function(){
   if(nPlayers > 1){
@@ -242,5 +247,10 @@ playButton.addEventListener("click", function(){
   createMultiplayerMenu();
 });
 
+// Bouton de sélection de la difficulté
+let difficultyButton = document.getElementById("difficulty");
+difficultyButton.addEventListener("click", setDifficulty);
+
+// Bouton de sélection du nombre de joueurs
 let nPlayersButton = document.getElementById("nPlayers");
 nPlayersButton.addEventListener("click", setPlayer);
