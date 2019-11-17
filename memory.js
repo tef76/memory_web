@@ -72,6 +72,8 @@ class Card {
 // === FONCTIONS DU MEMORY =====================================================
 // =============================================================================
 
+// === Logique de jeu ==========================================================
+
 // initMemory : initialise le jeu en créant "nPairs" paires de carte
 function initMemory(nPairs) {
   let nCards = nPairs * 2;
@@ -87,7 +89,7 @@ function initMemory(nPairs) {
 }
 
 // gameRestore : restaure la partie sauvegardée
-function gameRestore(){
+function gameRestore() {
     cardsOnBoard.forEach(card => card.summon());
 }
 
@@ -107,14 +109,6 @@ function isMatching() {
 // updateScore : met à jour le score des joueurs                --- à préciser ?
 function updateScore(arrayPlayer, numPlayer) {
   arrayPlayer["P" + numPlayer] += 100;
-}
-
-// endOfGame : met fin au jeu                                   --- à préciser ?
-function endOfGame() {
-  alert(players["P1"]);
-  alert(players["P2"]);
-  alert(players["P3"]);
-  alert(players["P4"]);
 }
 
 // oneTurn : un tour de jeu                                     --- à préciser ?
@@ -151,66 +145,85 @@ function switchCardClick(state) {
   isCardsClickable = state;
 }
 
-// statistical : affiche les stats en fin de partie
-function statistical(){
-  alert(numberOfTurn);
+// endOfGame : met fin au jeu                                   --- à préciser ?
+function endOfGame() {
+  alert(playersScore["P1"]);
+  alert(playersScore["P2"]);
+  alert(playersScore["P3"]);
+  alert(playersScore["P4"]);
 }
 
 // nextPlayerTurn : lance le tour du prochain joueurs
-function nextPlayerTurn(){
-  if(numPlayer == 4){
-    numPlayer = 1;
+function nextPlayerTurn() {
+  if (currentPlayer == nPlayers) {
+    currentPlayer = 1;
   } else {
-    numPlayer++;
+    currentPlayer++;
   }
 }
 
-// disableButton : désactive les boutons de jeu
-function disableButton(){
-  difficultyButton.textContent = "";
-  playButton.textContent = "";
-  multiplayerButton.textContent = "";
+// === Boutons / interface / statistiques ======================================
+
+function initButtons() {
+
 }
 
-// setDifficulty : change la difficulter
-function setDifficulty(){
-  if(difficulty == 6){
+function disableButtons() {
+  document.querySelectorAll(".control-button").forEach(element => element.style.visibility = "hidden");
+}
+
+// statistics : affiche les stats en fin de partie
+function statistics() {
+  alert(numberOfTurn);
+}
+
+// setDifficulty : change la difficulté et met à jour le bouton en fonction
+function setDifficulty() {
+  if (difficulty == 6) {
     difficulty = 2;
   } else {
     difficulty += 2;
   }
-  difficultyButton.textContent = "difficulty : " + difficulty;
+  difficultyButton.textContent = "Nombre de paires : " + difficulty;
+}
+
+function setPlayer() {
+  if (nPlayers == 4) {
+    nPlayers = 1;
+  } else {
+    nPlayers += 1;
+  }
+  nPlayersButton.textContent = "Nombre de Joueurs : " + nPlayers;
 }
 
 // =============================================================================
 // === PREPARATION DU MEMORY ===================================================
 // =============================================================================
 
-let players = { "P1" : 0, "P2" : 0, "P3": 0 ,"P4" : 0 };
+let playersScore = { "P1" : 0, "P2" : 0, "P3": 0 ,"P4" : 0 };
 let multiplayer = false;
+
 let isCardsClickable = true;
 let numberOfTurn = 0;
-let numPlayer = 0;
+let currentPlayer = 0;
+let nPlayers = 1;
 let difficulty = 2;
+
+// Cartes
 let availableCards = ["c01", "c01", "d01", "d01", "s01", "s01", "h01", "h01",
 "d02", "d02", "c02", "c02", "h02", "h02", "s02", "s02"];
 let cardsOnBoard = [];
 let flippedCards = [];
 
-// === Discuter du format  =====================================================
+// Menu
 
 let difficultyButton = document.getElementById("difficulty");
-difficultyButton.addEventListener("click",setDifficulty);
-
+difficultyButton.addEventListener("click", setDifficulty);
 let playButton = document.getElementById("play");
-play.addEventListener("click", function(){
-initMemory(difficulty);
-disableButton();
+playButton.addEventListener("click", function(){
+  initMemory(difficulty);
+  disableButtons();
 });
 
-let multiplayerButton = document.getElementById("multiplayer");
-multiplayerButton.addEventListener("click",function(){
-multiplayer = true;
-initMemory(difficulty);
-disableButton();
-});
+let nPlayersButton = document.getElementById("nPlayers");
+nPlayersButton.addEventListener("click", setPlayer);

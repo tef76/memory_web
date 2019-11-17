@@ -18,6 +18,7 @@
         <?php
         if (isset($_SESSION["user_email"])) {
           echo "<p>Bienvenue ".$_SESSION["user_email"]."</p>";
+          echo "<a href=\"\">Déconnexion</a>";
         } else {
           echo "<a href=\"login.php\">Connexion</a>";
           echo "<a href=\"register.php\">Nouveau compte</a>";
@@ -26,12 +27,22 @@
       </div>
     </header>
 
-    <a id ="play">play</a>
-    <a id ="difficulty">difficulty : 2</a>
-    <a id ="multiplayer">multiplayer</a>
-
-
     <div id="main-wrapper">
+
+      <div id="ui-container">
+        <div id="ui-inner">
+          <div id="ui-buttons">
+            <button class="control-button" id ="play">Jouer</button>
+            <button class="control-button" id ="difficulty">Nombre de paires : 2</button>
+            <button class="control-button" id ="nPlayers">Nombre de joueurs : 1</button>
+          </div>
+          <div id="ui-players">
+          </div>
+          <div id="ui-end-stats">
+          </div>
+        </div>
+      </div>
+
       <div id="memory-game">
         <script src="memory.js"></script>
       </div>

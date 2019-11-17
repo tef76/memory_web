@@ -74,6 +74,41 @@ header {
   margin-right: auto;
 }
 
+#controls-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 32px;
+}
+
+#controls {
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#test {
+  visibility: visible;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.control-button {
+  background-color: #cfb311;
+  color: #000000;
+  font-size: 18px;
+  padding: 5px;
+  border: 2px solid #990000;
+  border-radius: 5px;
+}
+
+.control-button:hover {
+  cursor: pointer;
+}
+
 /* === MEMORY =============================================================== */
 
 #memory-game {
