@@ -1,4 +1,13 @@
-<?php session_start(); ?>
+<?php
+session_start();
+
+// Si la page est chargée avec l'url "index.php?disconnect=1", arrête la session
+//    en cours et recharge la page
+if (!empty($_GET["disconnect"])) {
+  session_destroy();
+  header("Location: index.php");
+}
+?>
 
 <!DOCTYPE html>
 
@@ -16,9 +25,12 @@
       <a href="index.php" id="page-title">mem.io</a>
       <div id="user-authentification">
         <?php
+        // Si une session est définie, affiche un mesage de bienvenue et un
+        //    bouton de déconnexion. Sinon, affiche les boutons usuels de
+        //    connexion et de création de nouveau compte.
         if (isset($_SESSION["user_email"])) {
           echo "<p>Bienvenue ".$_SESSION["user_email"]."</p>";
-          echo "<a href=\"\">Déconnexion</a>";
+          echo "<a href=\"index.php?disconnect=1\">Déconnexion</a>";
         } else {
           echo "<a href=\"login.php\">Connexion</a>";
           echo "<a href=\"register.php\">Nouveau compte</a>";
@@ -27,7 +39,7 @@
       </div>
     </header>
 
-    <div id="main-wrapper">
+    <div id="main-content">
 
       <div id="ui-container">
         <div id="ui-inner">
@@ -47,6 +59,7 @@
       <div id="memory-game">
         <script src="memory.js"></script>
       </div>
+
     </div>
 
     <footer>

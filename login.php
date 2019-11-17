@@ -3,6 +3,8 @@ session_start();
 
 include "db_infos.php";
 
+$err_msg = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   function test_input($data) {
@@ -14,7 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $email = test_input($_POST["email"]);
   $password = test_input($_POST["password"]);
-  $err_msg = "";
 
   // Créé une connexion à la base de donnée avec les informations contenues dans
   //    le fichier db_infos.php
@@ -65,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </header>
 
-    <div id="main-wrapper">
+    <div id="main-content">
       <h2>Connexion</h2>
       <br>
       <form method="POST" name="login_form" action="<?php echo $_SERVER["PHP_SELF"];?>">

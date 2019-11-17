@@ -3,6 +3,10 @@ session_start();
 
 include "db_infos.php";
 
+$email_err_msg = "";
+$password_err_msg = "";
+$validate_msg = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   function test_input($data) {
@@ -15,9 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = test_input($_POST["email"]);
   $password = test_input($_POST["password"]);
   $password_confirm = test_input($_POST["password_confirm"]);
-  $email_err_msg = "";
-  $password_err_msg = "";
-  $validate_msg = "";
 
   // (TODO : à faire en JS)
   // Stoppe le script si les mots de passes ne correspondent pas
@@ -85,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </header>
 
-    <div id="main-wrapper">
+    <div id="main-content">
       <h2>Nouveau compte</h2>
       <br>
       <form method="POST" name="register_form" action="<?php echo $_SERVER["PHP_SELF"];?>">

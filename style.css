@@ -59,15 +59,10 @@ header {
   color: #000000;
 }
 
-#user-authentification > form {
-  display: flex;
-  justify-content: space-between;
-  align-content: space-between;
-}
 
 /* === CONTENU PRINCIPAL ==================================================== */
 
-#main-wrapper {
+#main-content {
   width: 800px;
   height: 100%;
   margin-left: auto;

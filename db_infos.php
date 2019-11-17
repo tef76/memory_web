@@ -1,5 +1,3 @@
-<!-- db_infos.php : informations de connexion à la base de données -->
-
 <?php
   $db_server = "localhost";
   $db_username ="remi";
