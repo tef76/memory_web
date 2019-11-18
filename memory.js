@@ -1,6 +1,20 @@
 "use strict"
 
 // =============================================================================
+// === DEFINITION DE PLAYER ====================================================
+// =============================================================================
+
+class Player {
+  constructor(name) {
+    this.name = name;
+    this.score = 0;
+    this.winStreak = 0;
+    this.turnDurationAverage = 0;
+    this.turnDurationTotal = 0;
+  }
+}
+
+// =============================================================================
 // === DEFINITION DE CARD ======================================================
 // =============================================================================
 
@@ -73,7 +87,8 @@ class Card {
 // === FONCTIONS DU MEMORY =====================================================
 // =============================================================================
 
-// === Logique de jeu ==========================================================
+// === LOGIQUE DE JEU ==========================================================
+// =============================================================================
 
 // initMemory : initialise le jeu en créant "nPairs" paires de carte
 function initMemory(nPairs) {
@@ -91,11 +106,11 @@ function initMemory(nPairs) {
 
 // loadLastGame : restaure la dernière partie sauvegardée dans la base de donées
 function loadLastGame() {
-  let jsonLastGame = document.getElementById("json-last-game").innerHTML;
+  let jsonLastGame = document.getElementById("json-interface").innerHTML;
   let last_game = JSON.parse(jsonLastGame);
 
   nPlayers = last_game.nPlayers;
-  playersScore = last_game.playersScore;
+  players = last_game.players;
   currentPlayer = last_game.currentPlayer;
   difficulty = last_game.difficulty;
   numberOfTurn = last_game.numberOfTurn;
@@ -108,6 +123,12 @@ function loadLastGame() {
   flippedCards = last_game.flippedCards;
   cardsOnBoard.forEach(card => function() { card.summon(); });
   flippedCards.forEach(card => function() { card.flip(true); });
+}
+
+function saveCurrentGame() {
+  let jsonCurrentGame = JSON.stringify({players, numberOfTurn, currentPlayer,
+      nPlayers, difficulty, cardsOnBoard, flippedCards});
+  document.getElementById("json-interface").innerHTML = jsonCurrentGame;
 }
 
 // hasGameEnded : renvoie "true" si le nombre de retournées est égal au nombre
@@ -125,9 +146,9 @@ function isMatching() {
 
 // updateScore : met à jour le score des joueurs                  --- à préciser
 function updateScore() {
-  playersScore["P" + currentPlayer] += 100;
+  players[currentPlayer - 1].score += 100;
   document.getElementById("P" + currentPlayer).textContent =
-      "P" + currentPlayer + " : " + playersScore["P" + currentPlayer];
+      "P" + currentPlayer + " : " + players[currentPlayer - 1].score;
 }
 
 // oneTurn : un tour de jeu                      --- à préciser  --- à expliquer
@@ -142,8 +163,8 @@ function oneTurn() {
     if (!isMatching()) {
       setTimeout(resetTurn, 500);
       switchCardClick(false);
-      setTimeout(function(){switchCardClick(true);}, 500);
-      if (multiplayer) {
+      setTimeout(function() { switchCardClick(true); }, 500);
+      if (nPlayers > 1) {
         nextPlayerTurn();
       }
     } else {
@@ -167,6 +188,7 @@ function switchCardClick(state) {
 
 // endOfGame : met fin au jeu                      --- prototype  --- à préciser
 function endOfGame() {
+  toggleMenu("memory-game");
   toggleMenu("ui-players");
   toggleMenu("ui-end");
   let winnerPlayer = winner();
@@ -184,7 +206,8 @@ function nextPlayerTurn() {
   document.getElementById("P" + currentPlayer).classList.add("multiplayer-button");
 }
 
-// === Boutons / interface / statistiques ======================================
+// === INTERFACE UTILISATEUR ===================================================
+// =============================================================================
 
 // toggleMenu : affiche/cache le menu passé en paramètre (id HTML de la forme
 //    "ui-*nom-du-menu*")
@@ -223,8 +246,9 @@ function setDifficulty() {
   difficultyButton.textContent = "Nombre de paires : " + difficulty;
 }
 
-// setPlayer : définit le nombre de joueurs et met à jour le bouton en fonction
-function setPlayer() {
+// selectNumberOfPlayer : définit le nombre de joueurs et met à jour le bouton
+//    en fonction
+function selectNumberOfPlayer() {
   if (nPlayers == 4) {
     nPlayers = 1;
   } else {
@@ -233,11 +257,21 @@ function setPlayer() {
   nPlayersButton.textContent = "Nombre de Joueurs : " + nPlayers;
 }
 
+// setPlayers : Crée les joueurs
+function setPlayers() {
+  let newPlayer;
+  for( let i = 1; i <= nPlayers ;i++){
+    newPlayer = new Player("P" + i);
+    players.push(newPlayer);
+  }
+}
+
+// winner : Renvoie le numéro du joueur avec le meilleur score
 function winner() {
-  let winner = "P1";
+  let winner = 0;
   for (let i = 1; i <= nPlayers; i++) {
-    if(playersScore["P" + i] > playersScore[winner]){
-      winner = "P" + i;
+    if (players[i - 1].score > players[winner].score) {
+      winner = i;
     }
   }
   return winner;
@@ -248,8 +282,7 @@ function winner() {
 // =============================================================================
 
 // === Éléments de jeu
-let playersScore = { "P1" : 0, "P2" : 0, "P3": 0 ,"P4" : 0 };
-let multiplayer = false;
+let players = [];
 let isCardsClickable = true;
 let numberOfTurn = 0;
 let currentPlayer = 1;
@@ -267,11 +300,9 @@ let flippedCards = [];
 // Bouton "Jouer"
 let playButton = document.getElementById("play");
 playButton.addEventListener("click", function(){
-  if (nPlayers > 1){
-    multiplayer = true;
-  }
   toggleMenu("ui-players");
   toggleMenu("ui-main-menu");
+  setPlayers();
   initMemory(difficulty);
   createMultiplayerMenu();
   document.getElementById("P1").classList.add("multiplayer-button");
@@ -283,4 +314,7 @@ difficultyButton.addEventListener("click", setDifficulty);
 
 // Bouton de sélection du nombre de joueurs
 let nPlayersButton = document.getElementById("nPlayers");
-nPlayersButton.addEventListener("click", setPlayer);
+nPlayersButton.addEventListener("click", selectNumberOfPlayer);
+
+let replayButton = document.getElementById("replay");
+replayButton.addEventListener("click", function() { location.reload(); });
