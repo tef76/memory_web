@@ -8,7 +8,7 @@ class Card {
   constructor(rank) {
     // Propriétés de la carte
     this.rank = rank;
-    this.imgBack = "img/backs/Card-Back-02.png";
+    this.imgBack = "img/backs/Card-Back-Orange.png";
     this.imgFront = "img/cards/" + this.rank + ".png";
     this.isFlipped = false;
 
@@ -50,7 +50,7 @@ class Card {
   //    carte
   addEvent(card) {
     card.inner.addEventListener("click", function(){
-    if(isCardsClickable){
+    if (isCardsClickable) {
         if (!card.isFlipped) {
           card.flip(true);
           flippedCards.push(card);
@@ -126,8 +126,8 @@ function oneTurn() {
     if (!isMatching()) {
       setTimeout(resetTurn, 500);
       switchCardClick(false);
-      setTimeout(switchCardClick(true), 500);
-      if(multiplayer) {
+      setTimeout(function(){switchCardClick(true);}, 500);
+      if (multiplayer) {
         nextPlayerTurn();
       }
     } else {
@@ -151,19 +151,21 @@ function switchCardClick(state) {
 
 // endOfGame : met fin au jeu                      --- prototype  --- à préciser
 function endOfGame() {
-  alert(playersScore["P1"]);
-  alert(playersScore["P2"]);
-  alert(playersScore["P3"]);
-  alert(playersScore["P4"]);
+  toggleMenu("ui-players");
+  toggleMenu("ui-end");
+  let winnerPlayer = winner();
+  document.getElementById("winner").textContent = winnerPlayer + " à gagné";
 }
 
 // nextPlayerTurn : lance le tour du prochain joueur
 function nextPlayerTurn() {
+  document.getElementById("P" + currentPlayer).classList.remove("multiplayer-button");
   if (currentPlayer == nPlayers) {
     currentPlayer = 1;
   } else {
     currentPlayer++;
   }
+  document.getElementById("P" + currentPlayer).classList.add("multiplayer-button");
 }
 
 // === Boutons / interface / statistiques ======================================
@@ -192,15 +194,15 @@ function createMultiplayerMenu() {
 
 // statistics : affiche les statistiques de fin de partie          --- prototype
 function statistics() {
-  alert(numberOfTurn);
+  (numberOfTurn);
 }
 
 // setDifficulty : change la difficulté et met à jour le bouton en fonction
 function setDifficulty() {
-  if (difficulty == 6) {
-    difficulty = 2;
+  if (difficulty == 9) {
+    difficulty = 3;
   } else {
-    difficulty += 2;
+    difficulty += 3;
   }
   difficultyButton.textContent = "Nombre de paires : " + difficulty;
 }
@@ -215,6 +217,16 @@ function setPlayer() {
   nPlayersButton.textContent = "Nombre de Joueurs : " + nPlayers;
 }
 
+function winner() {
+  let winner = "P1";
+  for (let i = 1; i <= nPlayers; i++) {
+    if(playersScore["P" + i] > playersScore[winner]){
+      winner = "P" + i;
+    }
+  }
+  return winner;
+}
+
 // =============================================================================
 // === PREPARATION DU MEMORY ===================================================
 // =============================================================================
@@ -226,11 +238,12 @@ let isCardsClickable = true;
 let numberOfTurn = 0;
 let currentPlayer = 1;
 let nPlayers = 1;
-let difficulty = 2;
+let difficulty = 3;
 
 // === Cartes
 let availableCards = ["c01", "c01", "d01", "d01", "s01", "s01", "h01", "h01",
-"d02", "d02", "c02", "c02", "h02", "h02", "s02", "s02"];
+    "d02", "d02", "c02", "c02", "h02", "h02", "s02", "s02","d03", "d03", "c03",
+    "c03", "h03", "h03", "s03", "s03"];
 let cardsOnBoard = [];
 let flippedCards = [];
 
@@ -238,13 +251,14 @@ let flippedCards = [];
 // Bouton "Jouer"
 let playButton = document.getElementById("play");
 playButton.addEventListener("click", function(){
-  if(nPlayers > 1){
+  if (nPlayers > 1){
     multiplayer = true;
   }
   toggleMenu("ui-players");
   toggleMenu("ui-main-menu");
   initMemory(difficulty);
   createMultiplayerMenu();
+  document.getElementById("P1").classList.add("multiplayer-button");
 });
 
 // Bouton de sélection de la difficulté

@@ -9,8 +9,10 @@ html, body {
 }
 
 body {
-  background-color: #006600;
+  background-color: #66b132;
+/*
   background-image: url("img/green-fibers.png");
+*/
   display: flex;
   flex-direction: column;
   font-family: 'ComfortaaRegular';
@@ -32,7 +34,7 @@ header {
   width: 100%;
   height: 48px;
   box-shadow: 0px 5px 10px black;
-  border-bottom: 5px solid #990000;
+  border-bottom: 5px solid #8601b0;
   margin-bottom: 32px;
   display: flex;
   justify-content: space-between;
@@ -56,7 +58,7 @@ header {
 }
 
 #user-authentification > a:hover {
-  background-color: #cfb311;
+  background-color: #fb9902;
   color: #000000;
 }
 
@@ -83,7 +85,7 @@ header {
   height: 100%;
 }
 
-#ui-main-menu, #ui-players, #ui-end-stats {
+#ui-main-menu, #ui-players, #ui-end {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -92,25 +94,32 @@ header {
   backface-visibility: hidden;
 }
 
+#ui-players > p {
+  margin: 15px;
+  font-size: 1.2em;
+}
+
 .hidden {
   transform: rotateY(180deg);
 }
 
 .control-button {
-  background-color: #cfb311;
+  background-color: #fb9902;
   color: #000000;
   margin-left: 5px;
   margin-right: 5px;
   font-size: 16px;
-  border: 2px solid #990000;
+  border: 2px solid #8601b0;
   border-radius: 5px;
 }
 
 .control-button:hover {
   cursor: pointer;
-  color: #ffffff;
-  background-color: #990000;
-  border: 2px solid #cfb311;
+  border: 2px solid #8601b0;
+}
+
+.multiplayer-button {
+  border: 2px solid #8601b0;
 }
 
 /* === MEMORY =============================================================== */
@@ -121,6 +130,7 @@ header {
   flex-wrap: wrap;
   justify-content: center;
   align-content: flex-start;
+  margin-top: 10px;
 }
 
 .card-container {
