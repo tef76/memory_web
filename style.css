@@ -1,5 +1,13 @@
 /* === GENERAL ============================================================== */
 
+:root {
+  --dark-moss-green: #446826;
+  --smoky-black: #11260B;
+  --dark-vanilla: #D4CDA9;
+  --copper-red: #D16F49;
+  --ruddy-brown: #A56129;
+}
+
 * {
   margin: 0;
 }
@@ -9,32 +17,30 @@ html, body {
 }
 
 body {
-  background-color: #66b132;
-/*
-  background-image: url("img/green-fibers.png");
-*/
+  background-color: var(--smoky-black);
+  background-image: url("img/classy-fabric.png");
   display: flex;
   flex-direction: column;
   font-family: 'ComfortaaRegular';
   font-weight: normal;
   font-style: normal;
-  color: white;
+  color: var(--dark-vanilla);
 }
 
 a, a:visited {
-  color: white;
+  color: var(--dark-vanilla);
 }
 
 
 /* === HEADER =============================================================== */
 
 header {
-  background-color: #002e10;
-  background-image: url("img/green-dust-and-scratches.png");
+  /* background-color: var(--ruddy-brown); */
+  background-image: url("img/padded.png");
   width: 100%;
   height: 48px;
   box-shadow: 0px 5px 10px black;
-  border-bottom: 5px solid #8601b0;
+  border-bottom: 5px solid var(--dark-vanilla);
   margin-bottom: 32px;
   display: flex;
   justify-content: space-between;
@@ -58,7 +64,7 @@ header {
 }
 
 #user-authentification > a:hover {
-  background-color: #fb9902;
+  background-color: var(--dark-vanilla);
   color: #000000;
 }
 
@@ -104,22 +110,23 @@ header {
 }
 
 .control-button {
-  background-color: #fb9902;
-  color: #000000;
+  background-color: var(--ruddy-brown);
+  background-image: url("img/asfalt-light.png");
+  color: var(--dark-vanilla);
   margin-left: 5px;
   margin-right: 5px;
   font-size: 16px;
-  border: 2px solid #8601b0;
+  border: 2px solid var(--ruddy-brown);
   border-radius: 5px;
 }
 
 .control-button:hover {
   cursor: pointer;
-  border: 2px solid #8601b0;
+  border: 2px solid var(--dark-vanilla);
 }
 
 .multiplayer-button {
-  border: 2px solid #8601b0;
+  border: 2px solid var(--dark-vanilla);
 }
 
 /* === MEMORY =============================================================== */
