@@ -9,6 +9,13 @@
   "currentPlayer": 1,
   "difficulty": 3,
   "numberOfTurn": 2,
-  "cardsOnBoard": ["s01", "s01", "c01", "d01", "c01", "d01"],
-  "flippedCards": ["c01", "c01"]
+  "cardsOnBoard": [
+    {"rank": "s01", "imgBack": "img/backs/Card-Back-Orange.png", "imgFront": "img/cards/s01.png", "isFlipped": "false", "container": null, "front": null, "back": null, "inner": null},
+    {"rank": "s01", "imgBack": "img/backs/Card-Back-Orange.png", "imgFront": "img/cards/s01.png", "isFlipped": "false", "container": null, "front": null, "back": null, "inner": null},
+    {"rank": "s02", "imgBack": "img/backs/Card-Back-Orange.png", "imgFront": "img/cards/s02.png", "isFlipped": "false", "container": null, "front": null, "back": null, "inner": null},
+    {"rank": "s02", "imgBack": "img/backs/Card-Back-Orange.png", "imgFront": "img/cards/s02.png", "isFlipped": "false", "container": null, "front": null, "back": null, "inner": null},
+    {"rank": "s03", "imgBack": "img/backs/Card-Back-Orange.png", "imgFront": "img/cards/s03.png", "isFlipped": "false", "container": null, "front": null, "back": null, "inner": null},
+    {"rank": "s03", "imgBack": "img/backs/Card-Back-Orange.png", "imgFront": "img/cards/s03.png", "isFlipped": "false", "container": null, "front": null, "back": null, "inner": null}
+  ],
+  "flippedCards": ["s01", "s01"]
 }

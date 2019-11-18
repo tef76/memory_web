@@ -102,7 +102,6 @@ function loadLastGame() {
 
   toggleMenu("ui-players");
   toggleMenu("ui-main-menu");
-  initMemory(difficulty);
   createMultiplayerMenu();
   document.getElementById("P1").classList.add("multiplayer-button");
   cardsOnBoard = last_game.cardsOnBoard;
