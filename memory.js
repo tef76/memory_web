@@ -89,9 +89,26 @@ function initMemory(nPairs) {
   }
 }
 
-// gameRestore : restaure la partie sauvegardée                    --- prototype
-function gameRestore() {
-  cardsOnBoard.forEach(card => card.summon());
+// loadLastGame : restaure la dernière partie sauvegardée dans la base de donées
+function loadLastGame() {
+  let jsonLastGame = document.getElementById("json-last-game").innerHTML;
+  let last_game = JSON.parse(jsonLastGame);
+
+  nPlayers = last_game.nPlayers;
+  playersScore = last_game.playersScore;
+  currentPlayer = last_game.currentPlayer;
+  difficulty = last_game.difficulty;
+  numberOfTurn = last_game.numberOfTurn;
+
+  toggleMenu("ui-players");
+  toggleMenu("ui-main-menu");
+  initMemory(difficulty);
+  createMultiplayerMenu();
+  document.getElementById("P1").classList.add("multiplayer-button");
+  cardsOnBoard = last_game.cardsOnBoard;
+  flippedCards = last_game.flippedCards;
+  cardsOnBoard.forEach(card => function() { card.summon(); });
+  flippedCards.forEach(card => function() { card.flip(true); });
 }
 
 // hasGameEnded : renvoie "true" si le nombre de retournées est égal au nombre

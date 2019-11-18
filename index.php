@@ -44,7 +44,37 @@ if (!empty($_GET["disconnect"])) {
       <div id="ui-container">
         <div id="ui-inner">
           <div id="ui-main-menu">
-            <button class="control-button" id ="play">Jouer</button>
+            <?php
+            if (isset($_SESSION["user_email"])) {
+              echo "<button class=\"control-button\" id =\"load\">Charger la dernière partie</button>";
+
+              include "db_infos.php";
+
+              $json_last_game;
+              $last_game_err_msg = "";
+
+              // Créé une connexion à la base de donnée avec les informations contenues dans
+              //    le fichier db_infos.php
+              $connection = mysqli_connect($db_server, $db_username, $db_password, $db_database);
+              if (!$connection) {
+                exit ("Connection failed :".mysqli_connect_error());
+              }
+
+              $request = "SELECT last_game FROM $db_table WHERE email = '".$_SESSION["user_email"]."'";
+              $result = mysqli_query($connection, $request);
+              $row = mysqli_fetch_assoc($result);
+              if ($row == NULL) {
+                $last_game_err_msg = "Impossible de récupérer la dernière partie.";
+              } else {
+                $json_last_game = $row["last_game"];
+                echo "<div hidden id=\"json-last-game\">".htmlspecialchars($json_last_game)."</div>";
+              }
+
+              // Ferme la connexion
+              mysqli_close($connection);
+            }
+            ?>
+            <button class="control-button" id ="play">Nouvelle partie</button>
             <button class="control-button" id ="difficulty">Nombre de paires : 3</button>
             <button class="control-button" id ="nPlayers">Nombre de joueurs : 1</button>
           </div>

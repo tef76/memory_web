@@ -1,0 +1,14 @@
+{
+  "nPlayers": 2,
+  "playersScore": {
+    "P1": 0,
+    "P2": 100,
+    "P3": 0,
+    "P4": 0
+  },
+  "currentPlayer": 1,
+  "difficulty": 3,
+  "numberOfTurn": 2,
+  "cardsOnBoard": ["s01", "s01", "c01", "d01", "c01", "d01"],
+  "flippedCards": ["c01", "c01"]
+}
