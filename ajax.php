@@ -19,10 +19,7 @@ if ($action == "load") {
 }
 
 $result = mysqli_query($connect, $request);
-$row = mysqli_fetch_assoc($result);
-echo $row["last_game"];
+echo mysqli_fetch_assoc($result)["last_game"];
 
-// Ferme la connexion
 mysqli_close($connection);
-
 ?>

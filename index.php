@@ -42,9 +42,8 @@ if (!empty($_GET["disconnect"])) {
 
       <div id="ui-container">
         <div id="ui-inner">
-
+          
           <div id="ui-main-menu">
-
             <button class="control-button" id ="play">Nouvelle partie</button>
             <button class="control-button" id ="difficulty">Nombre de paires : 3</button>
             <button class="control-button" id ="nPlayers">Nombre de joueurs : 1</button>
