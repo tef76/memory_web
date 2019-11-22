@@ -66,8 +66,13 @@ class Card {
   }
 }
 
+// =============================================================================
+// === DEFINITION DE MEMORY ====================================================
+// =============================================================================
+
 class Memory {
   constructor(nPairs, nPlayers) {
+    this.currentwinStreak = 0;
     this.nPairs = nPairs;
     this.nPlayers = nPlayers;
     this.players = new Array();
@@ -111,6 +116,7 @@ class Memory {
 
       // Si toutes les cartes sont retournées, met fin au jeu
       if (this.hasGameEnded()) {
+        this.currentwinStreak += 1;
         this.updateScore();
         this.endOfGame();
         return;
@@ -121,14 +127,16 @@ class Memory {
       // caché, et, si le nombre de joueurs est supérieur à 1, lance le tour du
       // prochain joueur. Sinon, augmente le score du joueur et fait rejouer ce
       // dernier
-      if (!memory.isMatching()) {
+      if (!this.isMatching()) {
         setTimeout(this.resetTurn, 500);
         switchCardClick(false);
         setTimeout(function() { switchCardClick(true); }, 500);
         if (this.nPlayers > 1) {
           this.nextPlayerTurn();
+          this.currentwinStreak = 0;
         }
       } else {
+        this.currentwinStreak += 1;
         this.updateScore();
       }
     }
@@ -173,13 +181,26 @@ class Memory {
     document.getElementById("P" + this.currentPlayer).textContent =
         "P" + this.currentPlayer + " : " +
         this.players[this.currentPlayer - 1].score;
+    if(this.currentwinStreak > this.players[this.currentPlayer - 1].winStreak){
+      this.players[this.currentPlayer - 1].winStreak = this.currentwinStreak;
+    }
+  }
+
+  // endOfGame : met fin au jeu
+  endOfGame() {
+    toggleMenu("memory-game");
+    toggleMenu("ui-players");
+    toggleMenu("ui-end");
+    let winnerPlayer = this.winnerIndex();
+    document.getElementById("winner").textContent = winnerPlayer + " à gagné";
+    statistics(this);
   }
 
   // winnerIndex : renvoie l'index du joueur avec le meilleur score
   winnerIndex() {
-    let winnerIndex = 1;
-    for (let i = 1; i <= this.nPlayers; i++) {
-      if (this.players[i - 1].score > this.players[winnerIndex].score) {
+    let winnerIndex = 0;
+    for (let i = 0; i < this.nPlayers; i++) {
+      if (this.players[i].score > this.players[winnerIndex].score) {
         winnerIndex = i;
       }
     }
@@ -200,8 +221,37 @@ function toggleMenu(menu) {
 }
 
 // statistics : affiche les statistiques de fin de partie          --- prototype
-function statistics() {
-  (numberOfTurn);
+function statistics(game) {
+  let container = document.getElementById("CreateTable");
+  let tab;
+  let td;
+  for (let i = 1; i <= game.nPlayers; i++) {
+    tab = document.createElement("tr");
+    container.appendChild(tab);
+    td = document.createElement("td")
+    td.textContent = game.players[i-1].name;
+    tab.appendChild(td);
+
+    container.appendChild(tab);
+    td = document.createElement("td")
+    td.textContent = game.players[i-1].score;
+    tab.appendChild(td);
+
+    container.appendChild(tab);
+    td = document.createElement("td")
+    td.textContent = game.players[i-1].winStreak;
+    tab.appendChild(td);
+
+    container.appendChild(tab);
+    td = document.createElement("td")
+    td.textContent = game.players[i-1].turnDurationAverage;
+    tab.appendChild(td);
+
+    container.appendChild(tab);
+    td = document.createElement("td")
+    td.textContent = game.players[i-1].turnDurationTotal;
+    tab.appendChild(td);
+  }
 }
 
 // createMultiplayerMenu : créé les boutons d'affichage du score en fonction du
@@ -277,3 +327,29 @@ nPlayersButton.addEventListener("click", function() {
 replayButton.addEventListener("click", function() {
   location.reload();
 });
+
+
+function saveCurrentGame(game) {
+  let request = new XMLHttpRequest();
+  request.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log(this.responseText);
+      document.getElementById("ui-side-menu-info").innerHTML = "Partie sauvegardée";
+    }
+  }
+  request.open("GET", "ajax.php?action=save&game=" + JSON.stringify(game), true);
+  request.send();
+}
+
+function loadLastGame(game) {
+  let request = new XMLHttpRequest();
+  request.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log(this.responseText);
+      // memory = JSON.parse(this.responseText);
+      document.getElementById("ui-side-menu-info").innerHTML = "Dernière partie restaurée";
+    }
+  }
+  request.open("GET", "ajax.php?action=load", true);
+  request.send();
+}

@@ -42,7 +42,7 @@ if (!empty($_GET["disconnect"])) {
 
       <div id="ui-container">
         <div id="ui-inner">
-          
+
           <div id="ui-main-menu">
             <button class="control-button" id ="play">Nouvelle partie</button>
             <button class="control-button" id ="difficulty">Nombre de paires : 3</button>
@@ -56,6 +56,11 @@ if (!empty($_GET["disconnect"])) {
           <div id="ui-end" class="hidden">
             <div id="ui-end-replay-button">
               <button class="control-button" id ="replay">Rejouer</button>
+              <table id="CreateTable">
+                <tr>
+                  <th>Player</th><th>score</th><th>winStreak</th><th>Temps de jeu par tour</th><th>Temps de jeu total</th>
+                </tr>
+              </table>
             </div>
             <p id="winner"></p>
           </div>
