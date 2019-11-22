@@ -7,17 +7,6 @@ if (!empty($_GET["disconnect"])) {
   session_destroy();
   header("Location: index.php");
 }
-
-function DOMinnerHTML($element) {
-  $innerHTML = "";
-  $children = $element->childNodes;
-  foreach ($children as $child) {
-    $tmp_dom = new DOMDocument();
-    $tmp_dom->appendChild($tmp_dom->importNode($child, true));
-    $innerHTML.=trim($tmp_dom->saveHTML());
-  }
-  return $innerHTML;
-}
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +44,6 @@ function DOMinnerHTML($element) {
         <div id="ui-inner">
 
           <div id="ui-main-menu">
-
             <button class="control-button" id ="play">Nouvelle partie</button>
             <button class="control-button" id ="difficulty">Nombre de paires : 3</button>
             <button class="control-button" id ="nPlayers">Nombre de joueurs : 1</button>
@@ -68,6 +56,11 @@ function DOMinnerHTML($element) {
           <div id="ui-end" class="hidden">
             <div id="ui-end-replay-button">
               <button class="control-button" id ="replay">Rejouer</button>
+              <table id="CreateTable">
+                <tr>
+                  <th>Player</th><th>score</th><th>winStreak</th><th>Temps de jeu par tour</th><th>Temps de jeu total</th>
+                </tr>
+              </table>
             </div>
             <p id="winner"></p>
           </div>
@@ -78,6 +71,7 @@ function DOMinnerHTML($element) {
             echo "<p>".$_SESSION["user_email"]."</p>";
             echo "<button class=\"control-button\" id =\"load\">Charger la dernière partie</button>";
             echo "<button class=\"control-button\" id =\"save\">Sauvegarder la partie en cours</button>";
+            echo "<p id=\"ui-side-menu-info\"></p>";
             echo "</div>";
           }
           ?>
