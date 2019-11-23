@@ -7,6 +7,15 @@ if (!empty($_GET["disconnect"])) {
   session_destroy();
   header("Location: index.php");
 }
+
+// hide_if_unknown : output "hidden" dans le fichier si aucun utilisateur n'est
+// connecté. Permet de masquer certaines balises utiles uniquement si une
+// session à été ouverte
+function hide_if_unknown() {
+  if (!isset($_SESSION["user_email"])) {
+    echo "hidden";
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -43,7 +52,7 @@ if (!empty($_GET["disconnect"])) {
       <div id="ui-container">
         <div id="ui-inner">
 
-          <div id="ui-main-menu">
+          <div id="ui-main-menu" class="hidden">
             <button class="control-button" id ="play">Nouvelle partie</button>
             <button class="control-button" id ="difficulty">Nombre de paires : 3</button>
             <button class="control-button" id ="nPlayers">Nombre de joueurs : 1</button>
@@ -65,17 +74,18 @@ if (!empty($_GET["disconnect"])) {
             <p id="winner"></p>
           </div>
 
-          <?php
-          if (isset($_SESSION["user_email"])) {
-            echo "<div id=\"ui-side-menu\">";
-            echo "<p>".$_SESSION["user_email"]."</p>";
-            echo "<button class=\"control-button\" id =\"load\">Charger la dernière partie</button>";
-            echo "<button class=\"control-button\" id =\"save\">Sauvegarder la partie en cours</button>";
-            echo "<p id=\"ui-side-menu-info\"></p>";
-            echo "</div>";
-          }
-          ?>
-
+          <div id="ui-side-menu">
+            <?php
+              if (isset($_SESSION["user_email"])) {
+                echo "<p>".$_SESSION["user_email"]."</p>";
+              } else {
+                echo "<p>Connectez vous pour sauvegarder votre partie</p>";
+              }
+            ?>
+            <button <?php hide_if_unknown(); ?> class="control-button" id ="load">Charger la dernière partie</button>
+            <button <?php hide_if_unknown(); ?> class="control-button" id ="save">Sauvegarder la partie en cours</button>
+            <p id="ui-side-menu-info"></p>
+          </div>
         </div>
       </div>
 
