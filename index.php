@@ -91,7 +91,7 @@ if (!empty($_GET["disconnect"])) {
           <img id="github-logo" src="img/GitHub-Mark-Light-32px.png" alt="GitHub Logo">
         </a>
       </p>
-      <p>Set de cartes "Playing Cards" par Iron Star Media sous licence CC-B 3.0 modifié par Rémi Durieu</p>
+      <p>Set de cartes "Playing Cards" par Iron Star Media sous licence CC-BY 3.0 modifié par Rémi Durieu</p>
       <p>Police "Comfortaa" par Johan Aakerlund sous licence OFL</p>
     </footer>
   </body>

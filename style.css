@@ -31,6 +31,19 @@ a, a:visited {
   color: var(--dark-vanilla);
 }
 
+form > input {
+  background-color: var(--dark-vanilla);
+  border: 2px solid var(--dark-vanilla);
+  border-radius: 5px;
+  width: 33%;
+  height: 32px;
+  margin: 5px;
+}
+
+form > input:focus {
+  border: 2px solid var(--ruddy-brown);
+}
+
 
 /* === HEADER =============================================================== */
 

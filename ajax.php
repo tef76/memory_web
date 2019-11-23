@@ -23,9 +23,11 @@ if ($mysqli->connect_errno) {
 }
 
 // Si l'action demandée est la sauvegarde de la partie en cours, met à jour le
-// champ "last_game" de l'utilisateur connecté avec "json_game"
+// champ "last_game" de l'utilisateur connecté avec $json_game
 if ($action == "save") {
-  $query = "UPDATE $db_table SET last_game = '$json_game' WHERE email = '$user_email'";
+  $query = "UPDATE $db_table
+            SET last_game = '$json_game'
+            WHERE email = '$user_email'";
   if ($mysqli->query($query) === TRUE) {
     echo "Database updated successfully";
   }

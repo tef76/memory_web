@@ -1,12 +1,20 @@
 <?php
+// login.php : contient un formulaire de connexion et le traitement de ce
+// dernier
+
+// Ouvre la session
 session_start();
 
+// Inclus les informations de connexions à la base de données
 include "db_infos.php";
 
+// Initialise le potentiel message d'erreur à afficher dans le formulaire
 $err_msg = "";
 
+// Exécute le script seulement si un formulaire a été envoyé
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+  // test_input : supprime les caractères non désirables de la chaîne $data
   function test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -14,21 +22,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     return $data;
   }
 
+  // Récupère l'email et le mot de passe envoyés par le formulaire
   $email = test_input($_POST["email"]);
   $password = test_input($_POST["password"]);
 
-  // Créé une connexion à la base de donnée avec les informations contenues dans
-  //    le fichier db_infos.php
-  $connection = mysqli_connect($db_server, $db_username, $db_password, $db_database);
-  if (!$connection) {
-    exit ("Connection failed :".mysqli_connect_error());
+  // Ouvre une nouvelle connexion à la base de données
+  $mysqli = new mysqli($db_server, $db_username, $db_password, $db_database);
+  if ($mysqli->connect_errno) {
+    exit ("Connection failed :".$mysqli->connect_error);
   }
 
   // Envoie une requête à la base de données, recherchant l'entrée qui
-  //    correspond au couple email/password donnée en entrée
-  $request = "SELECT * FROM $db_table WHERE email = '$email' AND password = '$password'";
-  $result = mysqli_query($connection, $request);
-  if (mysqli_fetch_assoc($result) == NULL) {
+  // correspond au couple $email/$password donnée en entrée
+  $request = "SELECT * FROM $db_table
+              WHERE email = '$email' AND password = '$password'";
+  $result = $mysqli->query($request);
+  if ($result->fetch_assoc() == NULL) {
     $err_msg = "L'adresse mail et/ou le mot de passe sont incorrects.";
   } else {
     $_SESSION["user_email"] = $email;
@@ -36,7 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   // Ferme la connexion
-  mysqli_close($connection);
+  $result->free();
+  $mysqli->close();
 }
 ?>
 
@@ -80,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <br>
         <?php echo $err_msg; ?>
         <br>
-        <input type="submit" value="Se connecter">
+        <input type="submit" value="Se connecter" class="control-button">
       </form>
     </div>
 
@@ -90,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <img id="github-logo" src="img/GitHub-Mark-Light-32px.png" alt="GitHub Logo">
         </a>
       </p>
-      <p>Set de cartes "Playing Cards" par Iron Star Media sous licence CC-B 3.0 modifié par Rémi Durieu</p>
+      <p>Set de cartes "Playing Cards" par Iron Star Media sous licence CC-BY 3.0 modifié par Rémi Durieu</p>
       <p>Police "Comfortaa" par Johan Aakerlund sous licence OFL</p>
     </footer>
   </body>
