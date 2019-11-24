@@ -4,6 +4,7 @@
 // === DEFINITION DE PLAYER ====================================================
 // =============================================================================
 
+// --- Objet Player ------------------------------------------------------------
 function Player(name) {
   this.name = name;
   this.score = 0;
@@ -16,6 +17,7 @@ function Player(name) {
 // === DEFINITION DE CARD ======================================================
 // =============================================================================
 
+// --- Objet Card --------------------------------------------------------------
 function Card(rank) {
   // Propriétés de la carte
   this.rank = rank;
@@ -29,6 +31,8 @@ function Card(rank) {
   this.back = null;
   this.inner = null;
 }
+
+// --- Fonctions liées à l'objet Card ------------------------------------------
 
 // summon : insère les conteneurs HTML de la carte courante dans la
 // balise "memory-game"
@@ -59,8 +63,21 @@ function unsummon(card) {
   document.getElementById("memory-game").removeChild(card.container);
 }
 
-// flip : modifie la classe de this.inner et ajuste this.isFlipped en
-// fonction de state
+// addEventToCard : ajoute card l'évènement chargé de la retourner
+function addEvent(card) {
+  card.container.addEventListener("click", function() {
+  if (isCardsClickable) {
+      if (!card.isFlipped) {
+        flip(card, true);
+        memory.flippedCards.push(card);
+        oneTurn();
+      }
+    }
+  });
+}
+
+// flip : modifie la classe de this.inner et ajuste this.isFlipped en fonction
+// de state
 function flip(card, state) {
   card.inner.classList.toggle("card-inner-flip");
   card.inner.classList.toggle("card-inner");
@@ -84,6 +101,8 @@ function Memory(nPairs, nPlayers) {
 }
 
 // --- Fonctions liées à l'objet Memory ----------------------------------------
+
+// fillBoard : créé les cartes du memory et les affiche
 function fillBoard() {
   let nCards = memory.nPairs * 2;
   let cardRank = "";
@@ -93,21 +112,9 @@ function fillBoard() {
     newCard = new Card(cardRank);
     memory.cardsOnBoard.push(newCard);
     summon(newCard);
-    addEventToCard(newCard);
+    addEvent(newCard);
     nCards--;
   }
-}
-
-function addEventToCard(card) {
-  card.container.addEventListener("click", function() {
-  if (isCardsClickable) {
-      if (!card.isFlipped) {
-        flip(card, true);
-        memory.flippedCards.push(card);
-        oneTurn();
-      }
-    }
-  });
 }
 
 // oneTurn : lance un nouveau tour de jeu lorsque deux cartes ont été révélées
@@ -146,13 +153,14 @@ function oneTurn() {
 // nextPlayerTurn : lance le tour du prochain joueur
 function nextPlayerTurn() {
   let x = document.getElementById("P" + memory.currentPlayer);
-  x.classList.remove("multiplayer-button");
+  x.classList.remove("active-player");
   if (memory.currentPlayer == memory.nPlayers) {
     memory.currentPlayer = 1;
   } else {
     memory.currentPlayer++;
   }
-  x.classList.add("multiplayer-button");
+  x = document.getElementById("P" + memory.currentPlayer);
+  x.classList.add("active-player");
 }
 
 // resetTurn : retourne face cachée les deux dernières cartes révélées
@@ -211,9 +219,9 @@ function winnerIndex() {
 // =============================================================================
 
 // toggleMenu : affiche/cache le menu passé en paramètre (id HTML de la forme
-//    "ui-*nom-du-menu*")
-//    Exemple : toggleMenu("ui-main-menu") --> affiche le menu principal si ce
-//    dernier était caché
+// "ui-*nom-du-menu*")
+// Exemple : toggleMenu("ui-main-menu") --> affiche le menu principal si ce
+// dernier était caché
 function toggleMenu(menu) {
   if (menu === "ui-main-menu") {
     document.getElementById("ui-main-menu").classList.remove("hidden");
@@ -268,9 +276,12 @@ function statistics() {
 }
 
 // createMultiplayerMenu : créé les boutons d'affichage du score en fonction du
-//    nombre de joueurs
+// nombre de joueurs
 function createMultiplayerMenu() {
   let container = document.getElementById("ui-players");
+  let title = document.createElement("p");
+  title.innerHTML = "Score :";
+  container.appendChild(title);
   let button;
   for (let i = 1; i <= memory.nPlayers; i++) {
     button = document.createElement("button");
@@ -322,7 +333,7 @@ playButton.addEventListener("click", function() {
   setPlayers();
   fillBoard();
   createMultiplayerMenu();
-  document.getElementById("P1").classList.add("multiplayer-button");
+    document.getElementById("P1").classList.add("active-player");
 });
 
 difficultyButton.addEventListener("click", function() {
@@ -352,29 +363,47 @@ replayButton.addEventListener("click", function() {
 let saveButton = document.getElementById("save");
 let loadButton = document.getElementById("load");
 
+// saveCurrentGame : sauvegarde la partie actuelle dans la base de données
 function saveCurrentGame() {
+  // Message d'information
+  let info = "";
+
+  // Si aucune partie n'est en cours, affiche un message adéquat et arrête la
+  // fonction
+  if (memory.cardsOnBoard.length == 0) {
+    info = "Aucune partie à sauvegarder";
+    document.getElementById("ui-side-menu-info-on-game").innerHTML = info;
+    return;
+  }
+
+  // Créé une nouvelle requête AJAX
   let request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      console.log(this.responseText);
-      document.getElementById("ui-side-menu-info").innerHTML = "Partie sauvegardée";
+      info = "Partie sauvegardée";
+    } else {
+      info = "Impossible de sauvegarder la partie";
     }
+
+    // Affiche le message d'information
+    document.getElementById("ui-side-menu-info-on-game").innerHTML = info;
   }
-  request.open("GET", "ajax.php?action=save&game=" + JSON.stringify(memory), true);
+
+  // Envoie la requête
+  request.open("GET", "ajax.php?action=save&game=" + JSON.stringify(memory));
   request.send();
 }
 
-// LES CARTES SONT SUMMON DANS CARDSONBOARD ET FLIPPEDCARDS -> DOUBLONS
-// Se passer du tableau flippedCards et se référer uniquement à la valeur
-// isFlipped des cartes OU prendre en compte ces doublons dans la fonction
-// loadLastGame et les supprimer ?
+// loadLastGame : charge la partie dernière partie sauvegardée de l'utilisateur
 function loadLastGame() {
+  // Message d'information
+  let info = "";
+
+  // Créé une nouvelle requête AJAX
   let request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      console.log(this.responseText);
-
-      // Réinitialise les propriétés de memory et supprime les cartes
+      // Réinitialise les propriétés du memory et supprime les cartes
       memory.players = [];
       memory.cardsOnBoard.forEach(function(card) { unsummon(card); });
       memory.cardsOnBoard = [];
@@ -383,25 +412,45 @@ function loadLastGame() {
       // Charge les propriétés du memory depuis le JSON récupéré
       memory = JSON.parse(this.responseText);
 
-      // "play"
+      // Active l'affichage du menu multijoueur
       toggleMenu("ui-players");
-      setPlayers();
+
+      // Efface les boutons multijoueurs de la potentielle partie en cours
+      let uiPlayerContainer = document.getElementById("ui-players");
+      while (uiPlayerContainer.firstChild != null) {
+        uiPlayerContainer.removeChild(uiPlayerContainer.firstChild);
+      }
+
+      // Créé les boutons multijoueurs de la nouvelle partie
       createMultiplayerMenu();
+      memory.players.forEach(function(player) {
+        document.getElementById(player.name).textContent =
+            player.name + " : " + player.score;
+      });
+      let x = document.getElementById("P" + memory.currentPlayer);
+      x.classList.add("active-player");
+
+      // Affiche les cartes de la nouvelle partie
       memory.cardsOnBoard.forEach(function(card) {
         summon(card);
-        addEventToCard(card);
+        if (card.isFlipped) {
+          flip(card, true);
+        } else {
+          addEvent(card);
+        }
       });
-      memory.flippedCards.forEach(function(card) {
-        summon(card);
-        flip(card, true);
-      });
-      document.getElementById("P1").classList.add("multiplayer-button");
 
-      // Affiche un message de confirmation
-      document.getElementById("ui-side-menu-info").innerHTML = "Dernière partie restaurée";
+      info = "Dernière partie restaurée";
+    } else {
+      info = "Impossible de restaurer la partie";
     }
+
+    // Affiche le message d'information
+    document.getElementById("ui-side-menu-info-on-game").innerHTML = info;
   }
-  request.open("GET", "ajax.php?action=load", true);
+
+  // Envoie la requête
+  request.open("GET", "ajax.php?action=load");
   request.send();
 }
 

@@ -129,8 +129,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <img id="github-logo" src="img/GitHub-Mark-Light-32px.png" alt="GitHub Logo">
         </a>
       </p>
-      <p>Set de cartes "Playing Cards" par Iron Star Media sous licence CC-BY 3.0 modifié par Rémi Durieu</p>
-      <p>Police "Comfortaa" par Johan Aakerlund sous licence OFL</p>
+      <p>Set de cartes <a target="_blank" href="http://www.ironstarmedia.co.uk/resources/free-game-assets/?drawer=assets*graphics*sprites*Playing%20Cards">"Playing Cards"</a> par Iron Star Media sous licence CC-BY 3.0 modifié par Rémi Durieu</p>
+      <p>Police <a target="_blank" href="https://fontlibrary.org/en/font/comfortaa">"Comfortaa"</a> par Johan Aakerlund sous licence OFL</p>
     </footer>
   </body>
 </html>
