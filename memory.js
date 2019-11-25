@@ -9,6 +9,7 @@ function Player(name) {
   this.name = name;
   this.score = 0;
   this.winStreak = 0;
+  this.numberOfTurn = 0;
   this.turnDurationAverage = 0;
   this.turnDurationTotal = 0;
 }
@@ -93,7 +94,6 @@ function Memory(nPairs, nPlayers) {
   this.nPairs = nPairs;
   this.nPlayers = nPlayers;
   this.players = new Array();
-  this.numberOfTurn = 0;
   this.currentPlayer = 1;
   this.cardsOnBoard = new Array();
   this.flippedCards = new Array();
@@ -120,7 +120,6 @@ function fillBoard() {
 // oneTurn : lance un nouveau tour de jeu lorsque deux cartes ont été révélées
 function oneTurn() {
   if (memory.flippedCards.length % 2 == 0) {
-    memory.numberOfTurn++;
 
     // Si toutes les cartes sont retournées, met fin au jeu
     if (hasGameEnded()) {
@@ -159,6 +158,7 @@ function nextPlayerTurn() {
   } else {
     memory.currentPlayer++;
   }
+  memory.players[memory.currentPlayer - 1].numberOfTurn += 1;
   x = document.getElementById("P" + memory.currentPlayer);
   x.classList.add("active-player");
 }
@@ -197,6 +197,7 @@ function updateScore() {
 
 // endOfGame : met fin au jeu
 function endOfGame() {
+  toggleMenu("ui-main-menu");
   toggleMenu("ui-end");
   let winnerPlayer = winnerIndex();
   document.getElementById("winner").textContent = winnerPlayer + " à gagné";
@@ -212,6 +213,16 @@ function winnerIndex() {
     }
   }
   return winnerIndex;
+}
+
+// timeOfPlayer : Calcul le temps de jeu de chaque joueurs
+function timeOfPlayer(){
+  let timer = setInterval(function() {
+    memory.players[memory.currentPlayer - 1].turnDurationTotal +=1;
+    if(hasGameEnded()){
+        clearInterval(timer);
+    }
+  }, 1000);
 }
 
 // =============================================================================
@@ -237,16 +248,23 @@ function toggleMenu(menu) {
     document.getElementById("ui-main-menu").classList.add("hidden");
     document.getElementById("ui-players").classList.add("hidden");
     document.getElementById("ui-end").classList.remove("hidden");
+    document.getElementById("memory-game").classList.add("hidden");
   }
   // document.getElementById(menu).classList.toggle("hidden");
 }
 
 // statistics : affiche les statistiques de fin de partie          --- prototype
 function statistics() {
-  let container = document.getElementById("CreateTable");
+  let container = document.getElementById("Table");
   let tab;
   let td;
   for (let i = 1; i <= memory.nPlayers; i++) {
+    if(memory.players[i - 1].turnDurationTotal != 0){
+      memory.players[i - 1].turnDurationAverage =
+        memory.players[i - 1].turnDurationTotal /
+          memory.players[i - 1].numberOfTurn;
+    }
+
     tab = document.createElement("tr");
     container.appendChild(tab);
     td = document.createElement("td")
@@ -260,17 +278,22 @@ function statistics() {
 
     container.appendChild(tab);
     td = document.createElement("td")
+    td.textContent = memory.players[i-1].numberOfTurn;
+    tab.appendChild(td);
+
+    container.appendChild(tab);
+    td = document.createElement("td")
     td.textContent = memory.players[i-1].winStreak;
     tab.appendChild(td);
 
     container.appendChild(tab);
     td = document.createElement("td")
-    td.textContent = memory.players[i-1].turnDurationAverage;
+    td.textContent = memory.players[i-1].turnDurationAverage.toFixed(2) + "s";
     tab.appendChild(td);
 
     container.appendChild(tab);
     td = document.createElement("td")
-    td.textContent = memory.players[i-1].turnDurationTotal;
+    td.textContent = memory.players[i-1].turnDurationTotal + "s";
     tab.appendChild(td);
   }
 }
@@ -333,7 +356,9 @@ playButton.addEventListener("click", function() {
   setPlayers();
   fillBoard();
   createMultiplayerMenu();
-    document.getElementById("P1").classList.add("active-player");
+  document.getElementById("P1").classList.add("active-player");
+  memory.players[0].numberOfTurn = 1;
+  timeOfPlayer();
 });
 
 difficultyButton.addEventListener("click", function() {
