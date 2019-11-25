@@ -29,7 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Ouvre une nouvelle connexion à la base de données
   $mysqli = new mysqli($db_server, $db_username, $db_password, $db_database);
   if ($mysqli->connect_errno) {
-    exit ("Connection failed :".$mysqli->connect_error);
+    $err_msg = "Connection failed :".$mysqli->connect_error;
+    goto script_exit;
   }
 
   // Envoie une requête à la base de données, recherchant l'entrée qui
@@ -45,7 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   // Ferme la connexion
-  $result->free();
+  script_exit:
+  if (isset($result)) {
+    $result->free();
+  }
   $mysqli->close();
 }
 ?>
@@ -88,10 +92,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <br>
         <input type="password" name="password" placeholder="**********" required>
         <br>
-        <?php echo $err_msg; ?>
         <br>
         <input type="submit" value="Se connecter" class="control-button">
       </form>
+      <?php echo $err_msg; ?>
     </div>
 
     <footer>

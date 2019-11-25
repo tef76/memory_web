@@ -41,7 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Ouvre une nouvelle connexion à la base de données
   $mysqli = new mysqli($db_server, $db_username, $db_password, $db_database);
   if ($mysqli->connect_errno) {
-    exit ("Connection failed :".$mysqli->connect_error);
+    $validate_msg = "Connection failed :".$mysqli->connect_error;
+    goto script_exit;
   }
 
   // Si l'adresse mail figure déjà dans la base de données, affiche le message
@@ -61,13 +62,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if ($mysqli->query($request) === TRUE ) {
     $validate_msg =  "Votre inscription a été effectuée avec succès.";
   } else {
-    echo "Error: ".$request."<br>".$mysqli->connect_error;
+    $validate_msg = "Error: ".$request."<br>".$mysqli->connect_error;
   }
 
   // Ferme la connexion
   script_exit:
   if (isset($mysqli)) {
-    $result->free();
+    if (isset($result)) {
+      $result->free();
+    }
     $mysqli->close();
   }
 }
