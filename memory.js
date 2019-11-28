@@ -1,3 +1,10 @@
+/* --- TODO --- */
+/*
+  - Mettre en forme les stats
+  - Ajustements graphiques
+ */
+
+
 "use strict"
 
 // =============================================================================
@@ -64,7 +71,7 @@ function unsummon(card) {
   document.getElementById("memory-game").removeChild(card.container);
 }
 
-// addEventToCard : ajoute card l'évènement chargé de la retourner
+// addEventToCard : ajoute à card l'évènement chargé de la retourner
 function addEvent(card) {
   card.container.addEventListener("click", function() {
   if (isCardsClickable) {

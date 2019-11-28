@@ -5,16 +5,36 @@
 // Ouvre la session
 session_start();
 
-// Inclus les informations de connexions à la base de données
-include "db_infos.php";
-
 // Initialise les potentiels messages d'erreurs à afficher dans le formulaire
 $email_err_msg = "";
 $password_err_msg = "";
-$validate_msg = "";
+$info_msg = "";
 
-// Exécute le script seulement si un formulaire a été envoyé
+// Exécute le script d'inscription seulement si un formulaire a été envoyé
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Inclus les informations de connexions à la base de données
+  include "db_infos.php";
+
+  // Termine le script si les données du formulaires n'existent pas/sont vides
+  if (!isset($_POST["email"])
+      || !isset($_POST["password"])
+      || !isset($_POST["password_confirm"])) {
+    $info_msg = "Merci de compléter le formulaire";
+    goto script_exit;
+  }
+
+  if (empty($_POST["email"])
+      || empty($_POST["password"])
+      || empty($_POST["password_confirm"])) {
+    $info_msg = "Merci de compléter le formulaire";
+    goto script_exit;
+  }
+
+  // Test la validité de l'email fourni
+  if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+    $email_err_msg = "L'adresse mail n'est pas valide";
+    goto script_exit;
+  }
 
   // test_input : supprime les caractères non désirables de la chaîne $data
   function test_input($data) {
@@ -30,24 +50,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password = test_input($_POST["password"]);
   $password_confirm = test_input($_POST["password_confirm"]);
 
-  // Affiche un message d'erreur dans le formulaire et stoppe le script sans
-  // ouvir de connexion à la base de données si le mot de passe et la
-  // confirmation du mot de passe ne correspondent pas
+  // Stoppe le script sans ouvir de connexion à la base de données si le mot de
+  // passe et la confirmation du mot de passe ne correspondent pas
   if ($password != $password_confirm) {
     $password_err_msg = "Les mots de passe ne correspondent pas";
     goto script_exit;
+  } else {
+    $password = password_hash($password, PASSWORD_DEFAULT);
   }
 
   // Ouvre une nouvelle connexion à la base de données
-  $mysqli = new mysqli($db_server, $db_username, $db_password, $db_database);
+  $mysqli = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
   if ($mysqli->connect_errno) {
-    $validate_msg = "Connection failed :".$mysqli->connect_error;
+    $info_msg = "Connection failed :".$mysqli->connect_error;
     goto script_exit;
   }
 
   // Si l'adresse mail figure déjà dans la base de données, affiche le message
   // d'erreur correspondant dans le formulaire et arrête le script
-  $request = "SELECT * FROM $db_table
+  $request = "SELECT * FROM ".DB_TABLE."
               WHERE email = '$email'";
   $result = $mysqli->query($request);
   if ($result->fetch_assoc() != NULL) {
@@ -57,12 +78,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Insère une nouvelle entrée dans la base de données et affiche le message
   // de validation dans le formulaire
-  $request = "INSERT INTO $db_table (email, password)
+  $request = "INSERT INTO ".DB_TABLE." (email, password)
               VALUES ('$email', '$password')";
   if ($mysqli->query($request) === TRUE ) {
-    $validate_msg =  "Votre inscription a été effectuée avec succès.";
+    $info_msg =  "Votre inscription a été effectuée avec succès.";
   } else {
-    $validate_msg = "Error: ".$request."<br>".$mysqli->connect_error;
+    $info_msg = "Error: ".$request."<br>".$mysqli->connect_error;
   }
 
   // Ferme la connexion
@@ -92,8 +113,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <a href="index.php" id="page-title">mem.io</a>
       <div id="user-authentification">
         <?php
+        // Si une session est définie, affiche un mesage de bienvenue et un
+        // bouton de déconnexion. Sinon, affiche les boutons usuels de connexion
+        // et de création de nouveau compte.
         if (isset($_SESSION["user_email"])) {
-          echo "<p>Bienvenue ".$_SESSION["user_email"]."</p>";
+          echo "<a href=\"index.php?disconnect=1\">Déconnexion</a>";
         } else {
           echo "<a href=\"login.php\">Connexion</a>";
           echo "<a href=\"register.php\">Nouveau compte</a>";
@@ -101,11 +125,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ?>
       </div>
     </header>
+    </header>
 
     <div id="main-content">
       <h2>Nouveau compte</h2>
       <br>
-      <form method="POST" name="register_form" action="<?php echo $_SERVER["PHP_SELF"];?>">
+      <form method="POST" name="register_form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
         E-mail :
         <br>
         <input type="email" name="email" placeholder="jean.dupont@exemple.com" required>
@@ -123,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <br>
         <input type="submit" value="Créer un compte" class="control-button">
       </form>
-      <?php echo $validate_msg; ?>
+      <?php echo $info_msg; ?>
     </div>
 
     <footer>

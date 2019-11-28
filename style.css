@@ -151,6 +151,10 @@ header {
   flex-direction: column;
 }
 
+#ui-side-menu-info > *, #ui-side-menu-buttons > * {
+  margin: 5px;
+}
+
 .hidden {
   transform: rotateY(180deg);
 }

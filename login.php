@@ -5,14 +5,30 @@
 // Ouvre la session
 session_start();
 
-// Inclus les informations de connexions à la base de données
-include "db_infos.php";
-
 // Initialise le potentiel message d'erreur à afficher dans le formulaire
 $err_msg = "";
 
 // Exécute le script seulement si un formulaire a été envoyé
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Inclus les informations de connexions à la base de données
+  include "db_infos.php";
+
+  // Termine le script si les données du formulaires n'existent pas/sont vides
+  if (!isset($_POST["email"]) || !isset($_POST["password"])) {
+    $info_msg = "Merci de compléter le formulaire";
+    goto script_exit;
+  }
+
+  if (empty($_POST["email"]) || empty($_POST["password"])) {
+    $info_msg = "Merci de compléter le formulaire";
+    goto script_exit;
+  }
+
+  // Test la validité de l'email fourni
+  if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+    $email_err_msg = "L'adresse mail n'est pas valide";
+    goto script_exit;
+  }
 
   // test_input : supprime les caractères non désirables de la chaîne $data
   function test_input($data) {
@@ -27,22 +43,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password = test_input($_POST["password"]);
 
   // Ouvre une nouvelle connexion à la base de données
-  $mysqli = new mysqli($db_server, $db_username, $db_password, $db_database);
+  $mysqli = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
   if ($mysqli->connect_errno) {
     $err_msg = "Connection failed :".$mysqli->connect_error;
     goto script_exit;
   }
 
-  // Envoie une requête à la base de données, recherchant l'entrée qui
-  // correspond au couple $email/$password donnée en entrée
-  $request = "SELECT * FROM $db_table
-              WHERE email = '$email' AND password = '$password'";
+  // Envoie une requête à la base de donnée, recherchant l'entrée qui correspond
+  // à l'adresse email récupérée
+  $request = "SELECT * FROM ".DB_TABLE." WHERE email = '$email'";
   $result = $mysqli->query($request);
-  if ($result->fetch_assoc() == NULL) {
-    $err_msg = "L'adresse mail et/ou le mot de passe sont incorrects.";
+  $row = $result->fetch_assoc();
+
+  // Si l'adresse mail n'existe pas, défini un message d'erreur
+  if ($row == NULL) {
+    $err_msg = "L'adresse email n'existe pas.";
   } else {
-    $_SESSION["user_email"] = $email;
-    header("Location: index.php");
+    // Compare le mot de passe récupéré avec celui chiffré dans la base de
+    // données. Si ils ne correspondent pas, défini un message d'erreur, sinon
+    // créé une nouvelle session et recharge la page
+    $password_db = $row["password"];
+    if (!password_verify($password, $password_db)) {
+      $err_msg = "L'adresse email et/ou le mot de passe sont incorrects";
+    } else {
+      $_SESSION["user_email"] = $email;
+      header("Location: index.php");
+    }
   }
 
   // Ferme la connexion
@@ -70,8 +96,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <a href="index.php" id="page-title">mem.io</a>
       <div id="user-authentification">
         <?php
+        // Si une session est définie, affiche un mesage de bienvenue et un
+        // bouton de déconnexion. Sinon, affiche les boutons usuels de connexion
+        // et de création de nouveau compte.
         if (isset($_SESSION["user_email"])) {
-          echo "<p>Bienvenue ".$_SESSION["user_email"]."</p>";
+          echo "<a href=\"index.php?disconnect=1\">Déconnexion</a>";
         } else {
           echo "<a href=\"login.php\">Connexion</a>";
           echo "<a href=\"register.php\">Nouveau compte</a>";
