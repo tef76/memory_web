@@ -19,7 +19,7 @@ $user_email = $_SESSION["user_email"];
 // Ouvre une nouvelle connexion à la base de données
 $mysqli = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 if ($mysqli->connect_errno) {
-  exit ("Connection failed :".$mysqli->connect_error);
+  echo "Connection failed :".$mysqli->connect_error;
 }
 
 // Si l'action demandée est la sauvegarde de la partie en cours, met à jour le
@@ -28,9 +28,14 @@ if ($action == "save") {
   $query = "UPDATE ".DB_TABLE."
             SET last_game = '$json_game'
             WHERE email = '$user_email'";
+  // En cas d'échec, affiche un message d'erreur. Sinon affiche la chaîne JSON.
+  // Le message d'erreur sera mal interprété par le parser JSON et ce dernier
+  // déclenchera une erreur.
   if ($mysqli->query($query) !== TRUE) {
     $mysqli->close();
-    exit ("SQL query failed:".$query);
+    echo "SQL query failed:".$query;
+  } else {
+    echo $json_game;
   }
 }
 

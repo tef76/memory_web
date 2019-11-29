@@ -411,8 +411,17 @@ function saveCurrentGame() {
   // Créé une nouvelle requête AJAX
   let request = new XMLHttpRequest();
   request.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      info = "Partie sauvegardée";
+    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+      try {
+        // Si la partie a bien été sauvegardée, ajax.php renvoie la partie au
+        // format JSON. Dans le cas contraire, JSON.parse retourne une erreur et
+        // déclenche le bloc catch
+        JSON.parse(this.responseText);
+        info = "Partie sauvegardée";
+      } catch (e) {
+        console.error("Parsing error:", e);
+        info = "Impossible de sauvegarder la partie";
+      }
     } else {
       info = "Impossible de sauvegarder la partie";
     }
@@ -434,24 +443,27 @@ function loadLastGame() {
   // Créé une nouvelle requête AJAX
   let request = new XMLHttpRequest();
   request.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      // Réinitialise les propriétés du memory et supprime les cartes
-      memory.players = [];
-      memory.cardsOnBoard.forEach(function(card) { unsummon(card); });
-      memory.cardsOnBoard = [];
-      memory.flippedCards = [];
-
-      // Charge les propriétés du memory depuis le JSON récupéré
+    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
       try {
-        let newMemory = JSON.parse(this.responseText);
+        // Charge les propriétés du memory depuis le JSON récupéré
+        let response = JSON.parse(this.responseText);
+
+        // Réinitialise les propriétés du memory et supprime les cartes
+        memory.players = [];
+        memory.cardsOnBoard.forEach(function(card) { unsummon(card); });
+        memory.cardsOnBoard = [];
+        memory.flippedCards = [];
+
+        // Affecte les propriétés du nouveau memory
+        memory = response;
       } catch (e) {
         console.error("Parsing error:", e);
+
+        // Affiche le message d'information
         info = "Impossible de restaurer la partie";
+        document.getElementById("ui-side-menu-info-on-game").innerHTML = info;
         return;
       }
-
-      memory = newMemory;
-
       // Active l'affichage du menu multijoueur
       toggleMenu("ui-players");
 
