@@ -442,7 +442,15 @@ function loadLastGame() {
       memory.flippedCards = [];
 
       // Charge les propriétés du memory depuis le JSON récupéré
-      memory = JSON.parse(this.responseText);
+      try {
+        let newMemory = JSON.parse(this.responseText);
+      } catch (e) {
+        console.error("Parsing error:", e);
+        info = "Impossible de restaurer la partie";
+        return;
+      }
+
+      memory = newMemory;
 
       // Active l'affichage du menu multijoueur
       toggleMenu("ui-players");

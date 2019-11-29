@@ -17,7 +17,7 @@ $action = ($_GET["action"]);
 $user_email = $_SESSION["user_email"];
 
 // Ouvre une nouvelle connexion à la base de données
-$mysqli = new mysqli($db_server, $db_username, $db_password, $db_database);
+$mysqli = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 if ($mysqli->connect_errno) {
   exit ("Connection failed :".$mysqli->connect_error);
 }
@@ -25,18 +25,19 @@ if ($mysqli->connect_errno) {
 // Si l'action demandée est la sauvegarde de la partie en cours, met à jour le
 // champ "last_game" de l'utilisateur connecté avec $json_game
 if ($action == "save") {
-  $query = "UPDATE $db_table
+  $query = "UPDATE ".DB_TABLE."
             SET last_game = '$json_game'
             WHERE email = '$user_email'";
-  if ($mysqli->query($query) === TRUE) {
-    echo "Database updated successfully";
+  if ($mysqli->query($query) !== TRUE) {
+    $mysqli->close();
+    exit ("SQL query failed:".$query);
   }
 }
 
 // Si l'acion demandée est le chargement de la partie précédente, affiche en
 // sortie cette dernière au format JSON
 if ($action == "load") {
-  $query = "SELECT last_game FROM $db_table WHERE email = '$user_email'";
+  $query = "SELECT last_game FROM ".DB_TABLE." WHERE email = '$user_email'";
   if ($result = $mysqli->query($query)) {
     echo $result->fetch_assoc()["last_game"];
     $result->free();

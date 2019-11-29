@@ -83,7 +83,7 @@ function hide_if_unknown() {
               <button class="control-button" id ="replay">Rejouer</button>
               <table id="Table">
                 <tr>
-                  <th id="winner"></th colspan="6">
+                  <th id="winner" colspan="6"></th>
                 </tr>
                 <tr>
                   <th>Player</th><th>score</th><th>nombre de tours</th><th>winStreak</th><th>Temps de jeu par tour</th><th>Temps de jeu total</th>

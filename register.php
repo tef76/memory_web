@@ -125,7 +125,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ?>
       </div>
     </header>
-    </header>
 
     <div id="main-content">
       <h2>Nouveau compte</h2>
