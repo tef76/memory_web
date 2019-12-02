@@ -76,12 +76,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     goto script_exit;
   }
 
-  // Insère une nouvelle entrée dans la base de données et affiche le message
-  // de validation dans le formulaire
+  // Insère une nouvelle entrée dans la base de données. Si l'insertion est
+  // réussie, redirige l'utilisateur nouvellement inscrit vers index.php
   $request = "INSERT INTO ".DB_TABLE." (email, password)
               VALUES ('$email', '$password')";
   if ($mysqli->query($request) === TRUE ) {
-    $info_msg =  "Votre inscription a été effectuée avec succès.";
+    $_SESSION["user_email"] = $email;
+    header("Location: index.php");
   } else {
     $info_msg = "Error: ".$request."<br>".$mysqli->connect_error;
   }
