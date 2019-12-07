@@ -1,10 +1,3 @@
-/* --- TODO --- */
-/*
-  - Mettre en forme les stats
-  - Ajustements graphiques
- */
-
-
 "use strict"
 
 // =============================================================================
@@ -132,7 +125,7 @@ function oneTurn() {
     if (hasGameEnded()) {
       memory.currentWinStreak += 1;
       updateScore();
-      endOfGame();
+      setTimeout(endOfGame, 750);
       return;
     }
 
@@ -191,20 +184,19 @@ function isMatching() {
       memory.flippedCards[memory.flippedCards.length - 2].rank;
 }
 
-// updateScore : met à jour le score des joueurs
+// updateScore : met à jour le score du joueur en cours
 function updateScore() {
-  memory.players[memory.currentPlayer - 1].score += 100;
+  let player = memory.players[memory.currentPlayer - 1];
+  player.score += 100;
   document.getElementById("P" + memory.currentPlayer).textContent =
-      "P" + memory.currentPlayer + " : " +
-      memory.players[memory.currentPlayer - 1].score;
-  if(memory.currentWinStreak > memory.players[memory.currentPlayer - 1].winStreak){
-    memory.players[memory.currentPlayer - 1].winStreak = memory.currentWinStreak;
+      "P" + memory.currentPlayer + " : " + player.score;
+  if (memory.currentWinStreak > player.winStreak) {
+    player.winStreak = memory.currentWinStreak;
   }
 }
 
 // endOfGame : met fin au jeu
 function endOfGame() {
-  toggleMenu("ui-main-menu");
   toggleMenu("ui-end");
   let winnerPlayer = winnerIndex();
   document.getElementById("winner").textContent = winnerPlayer + " à gagné";
@@ -222,11 +214,11 @@ function winnerIndex() {
   return winnerIndex;
 }
 
-// timeOfPlayer : Calcul le temps de jeu de chaque joueurs
-function timeOfPlayer(){
+// timeOfPlayer : calcule le temps de jeu de chaque joueurs
+function timeOfPlayer() {
   let timer = setInterval(function() {
-    memory.players[memory.currentPlayer - 1].turnDurationTotal +=1;
-    if(hasGameEnded()){
+    memory.players[memory.currentPlayer - 1].turnDurationTotal += 1;
+    if (hasGameEnded()) {
         clearInterval(timer);
     }
   }, 1000);
@@ -238,8 +230,6 @@ function timeOfPlayer(){
 
 // toggleMenu : affiche/cache le menu passé en paramètre (id HTML de la forme
 // "ui-*nom-du-menu*")
-// Exemple : toggleMenu("ui-main-menu") --> affiche le menu principal si ce
-// dernier était caché
 function toggleMenu(menu) {
   if (menu === "ui-main-menu") {
     document.getElementById("ui-main-menu").classList.remove("hidden");
@@ -257,10 +247,9 @@ function toggleMenu(menu) {
     document.getElementById("ui-end").classList.remove("hidden");
     document.getElementById("memory-game").classList.add("hidden");
   }
-  // document.getElementById(menu).classList.toggle("hidden");
 }
 
-// statistics : affiche les statistiques de fin de partie          --- prototype
+// statistics : affiche les statistiques de fin de partie          
 function statistics() {
   let container = document.getElementById("Table");
   let tab;
@@ -402,7 +391,7 @@ function saveCurrentGame() {
 
   // Si aucune partie n'est en cours, affiche un message adéquat et arrête la
   // fonction
-  if (memory.cardsOnBoard.length == 0) {
+  if (memory.cardsOnBoard.length == 0 || hasGameEnded()) {
     info = "Aucune partie à sauvegarder";
     document.getElementById("ui-side-menu-info-on-game").innerHTML = info;
     return;
@@ -464,8 +453,9 @@ function loadLastGame() {
         document.getElementById("ui-side-menu-info-on-game").innerHTML = info;
         return;
       }
-      // Active l'affichage du menu multijoueur
+      // Active l'affichage du menu multijoueur et de la vue principale
       toggleMenu("ui-players");
+      document.getElementById("memory-game").classList.remove("hidden");
 
       // Efface les boutons multijoueurs de la potentielle partie en cours
       let uiPlayerContainer = document.getElementById("ui-players");
