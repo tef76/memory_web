@@ -81,15 +81,15 @@ function hide_if_unknown() {
           <div id="ui-end" class="hidden">
             <div id="ui-end-replay-button">
               <button class="control-button" id ="replay">Rejouer</button>
-              <table id="Table">
-                <tr>
-                  <th id="winner" colspan="6"></th>
-                </tr>
-                <tr>
-                  <th>Player</th><th>score</th><th>nombre de tours</th><th>winStreak</th><th>Temps de jeu par tour</th><th>Temps de jeu total</th>
-                </tr>
-              </table>
             </div>
+            <table id="stats-table">
+              <tr>
+                <th id="winner" colspan="6"></th>
+              </tr>
+              <tr>
+                <th>Player</th><th>Score</th><th>Nombre de tours</th><th>Win Streak</th><th>Temps de jeu par tour</th><th>Temps de jeu total</th>
+              </tr>
+            </table>
           </div>
         </div>
       </div>

@@ -199,7 +199,8 @@ function updateScore() {
 function endOfGame() {
   toggleMenu("ui-end");
   let winnerPlayer = winnerIndex();
-  document.getElementById("winner").textContent = winnerPlayer + " à gagné";
+  document.getElementById("winner").textContent =
+      "P" + (winnerPlayer + 1) + " a gagné";
   statistics();
 }
 
@@ -249,9 +250,9 @@ function toggleMenu(menu) {
   }
 }
 
-// statistics : affiche les statistiques de fin de partie          
+// statistics : affiche les statistiques de fin de partie
 function statistics() {
-  let container = document.getElementById("Table");
+  let container = document.getElementById("stats-table");
   let tab;
   let td;
   for (let i = 1; i <= memory.nPlayers; i++) {
