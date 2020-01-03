@@ -483,6 +483,8 @@ function loadLastGame() {
           addEvent(card);
         }
       });
+      
+      timeOfPlayer();
 
       info = "Dernière partie restaurée";
     } else {
