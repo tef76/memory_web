@@ -87,7 +87,7 @@ function hide_if_unknown() {
                 <th id="winner" colspan="6"></th>
               </tr>
               <tr>
-                <th>Player</th><th>Score</th><th>Nombre de tours</th><th>Win Streak</th><th>Temps de jeu par tour</th><th>Temps de jeu total</th>
+                <th>Player</th><th>Score</th><th>Nombre de tours</th><th>Win Streak</th><th>Temps de jeu moyen par tour</th><th>Temps de jeu total</th>
               </tr>
             </table>
           </div>

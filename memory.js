@@ -144,6 +144,7 @@ function oneTurn() {
       }
     } else {
       memory.currentWinStreak += 1;
+      memory.players[memory.currentPlayer - 1].numberOfTurn += 1;
       updateScore();
     }
   }
